@@ -1,6 +1,13 @@
 import { Component, NgZone } from '@angular/core';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { LoadingController, Item } from 'ionic-angular';
+import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+// import { FirebaseListObservable } from 'angularfire2/database';
+
+
+
+
+
 declare var google;
 
 @Component({
@@ -21,11 +28,13 @@ export class MapPage {
   directionsService = new google.maps.DirectionsService;
   directionsDisplay = new google.maps.DirectionsRenderer;
   start: any; end: any;
+  // getLocation: FirebaseListObservable<any[]>;
 
   constructor(
     public zone: NgZone,
     public geolocation: Geolocation,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    public firebaseService: FirebaseServiceProvider,
   ) {
     this.start = new google.maps.LatLng(13.8262621, 100.5147228);
     this.end = new google.maps.LatLng(13.7627997, 100.5348922);
