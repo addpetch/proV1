@@ -14,21 +14,13 @@ import { LocationSelect } from '../pages/location-select/location-select/Locatio
 import { Connectivity } from '../providers/connectivity-service';
 import { GoogleMaps } from '../providers/google-maps/google-maps';
 import { Network } from '@ionic-native/network';
-import { FirebaseServiceProvider } from '../providers/firebase-service/firebase-service';
+//import { FirebaseServiceProvider } from '../providers/firebase-service/firebase-service';
 
 import { HttpModule } from '@angular/http';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireModule } from 'angularfire2';
+import { FIREBASE_CONFIG } from './firebase.credentials';
 // import { FirebaseService } from './../providers/firebase-service/firebase-service';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyA_jE3HrBBZCcEXua-Bbbgorv_d7IvL0xw",
-  authDomain: "e-train-1537891299197.firebaseapp.com",
-  databaseURL: "https://e-train-1537891299197.firebaseio.com",
-  projectId: "e-train-1537891299197",
-  storageBucket: "e-train-1537891299197.appspot.com",
-  messagingSenderId: "512180303029",
-};
 
 @NgModule({
   declarations: [
@@ -42,7 +34,7 @@ const firebaseConfig = {
     IonicModule.forRoot(MyApp),
     HttpModule,
     AngularFireDatabaseModule,
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(FIREBASE_CONFIG),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -58,7 +50,6 @@ const firebaseConfig = {
     SplashScreen,
     Geolocation,
     Network,
-    FirebaseServiceProvider,
     // FirebaseService,
   ]
 })
