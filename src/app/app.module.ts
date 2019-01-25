@@ -14,6 +14,13 @@ import { LocationSelect } from '../pages/location-select/location-select/Locatio
 import { Connectivity } from '../providers/connectivity-service';
 import { GoogleMaps } from '../providers/google-maps/google-maps';
 import { Network } from '@ionic-native/network';
+//import { FirebaseServiceProvider } from '../providers/firebase-service/firebase-service';
+
+import { HttpModule } from '@angular/http';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireModule } from 'angularfire2';
+import { FIREBASE_CONFIG } from './firebase.credentials';
+// import { FirebaseService } from './../providers/firebase-service/firebase-service';
 
 @NgModule({
   declarations: [
@@ -24,7 +31,10 @@ import { Network } from '@ionic-native/network';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    HttpModule,
+    AngularFireDatabaseModule,
+    AngularFireModule.initializeApp(FIREBASE_CONFIG),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -40,6 +50,7 @@ import { Network } from '@ionic-native/network';
     SplashScreen,
     Geolocation,
     Network,
+    // FirebaseService,
   ]
 })
 export class AppModule {}

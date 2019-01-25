@@ -1,6 +1,9 @@
 import { Component, NgZone } from '@angular/core';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { LoadingController, Item } from 'ionic-angular';
+//import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
+import { AngularFireDatabase } from 'angularfire2/database';
+
 declare var google;
 
 @Component({
@@ -21,12 +24,26 @@ export class MapPage {
   directionsService = new google.maps.DirectionsService;
   directionsDisplay = new google.maps.DirectionsRenderer;
   start: any; end: any;
+  // site = {
+  //   Lat : '13.7501304',
+  //   Lng: '100.5213145'
+  // };
+  Pop: any;
 
   constructor(
     public zone: NgZone,
     public geolocation: Geolocation,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
+    public db: AngularFireDatabase
+    
   ) {
+   // this.db.list('site').push(this.site);
+  //  this.db.list('site').valueChanges().subscribe(
+  //    data =>{
+  //      console.log(data)
+  //      this.Pop = data;
+  //    }
+  //  ) ;
     this.start = new google.maps.LatLng(13.8262621, 100.5147228);
     this.end = new google.maps.LatLng(13.7627997, 100.5348922);
     this.geocoder = new google.maps.Geocoder;
@@ -36,14 +53,26 @@ export class MapPage {
     this.autocomplete = {
       input: ''
     };
+    
     this.autocompleteItems = [];
     this.markers = [];
     this.loading = this.loadingCtrl.create();
+    // this.Pop = 'Popppp';
   }
+
 
   ionViewDidEnter(){
     this.getPosition();
+    // this.getDataFromFirebase();
+  }
 
+  getDataFromFirebase():any{
+    this.db.list('site/Lat').valueChanges().subscribe(
+      data => {
+        console.log(data)
+        this.Pop = data
+      }
+    )
   }
 
   getPosition():any{
