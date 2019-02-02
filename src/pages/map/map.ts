@@ -45,14 +45,14 @@ export class MapPage {
   //    }
   //  ) ;
     this.start = new google.maps.LatLng(13.8262621, 100.5147228);
-    this.end = new google.maps.LatLng(13.7627997, 100.5348922);
+    this.end = new google.maps.LatLng(13.7591387, 100.566437);
     this.geocoder = new google.maps.Geocoder;
     let elem = document.createElement("div")
     this.GooglePlaces = new google.maps.places.PlacesService(elem);
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.autocomplete = {
       input: ''
-    };
+    }
     
     this.autocompleteItems = [];
     this.markers = [];
@@ -83,6 +83,7 @@ export class MapPage {
       console.log(error);
     })
   }
+
   loadMap(position: Geoposition){
     let latitude = position.coords.latitude;
     let longitude = position.coords.longitude;
@@ -93,7 +94,7 @@ export class MapPage {
   
     // create LatLng object
     let myLatLng = {lat: latitude, lng: longitude};
-  
+    this.start = myLatLng;
     // create map
     this.map = new google.maps.Map(mapEle, {
       center: myLatLng,
@@ -108,21 +109,10 @@ export class MapPage {
       });
       mapEle.classList.add('show-map');
     });
-
-    //test direction
-    this.directionsDisplay.setMap(this.map);
-    this.directionsService.route({
-    origin: this.start,
-    destination: this.end,
-    travelMode: 'DRIVING'
-    }, (response, status) => {
-    if (status === 'OK') {
-    this.directionsDisplay.setDirections(response);
-    } else {
-    window.alert('Directions request failed due to ’ + status');
-    }
-    });
+    
+    
   }
+
   updateSearchResults(){
     if (this.autocomplete.input == '') {
       this.autocompleteItems = [];
@@ -155,11 +145,27 @@ export class MapPage {
           position: results[0].geometry.location,
           map: this.map
         });
+        console.log(this.end);
         this.markers.push(marker);
         this.map.setCenter(results[0].geometry.location);
+        // this.end = results[0].geometry.location;
       }
       
     })
+    
+    //test direction
+    this.directionsDisplay.setMap(this.map);
+    this.directionsService.route({
+    origin:  this.start,
+    destination: this.end,
+    travelMode: 'DRIVING'},
+    (response, status) => {
+    if (status === 'OK') {
+    this.directionsDisplay.setDirections(response);
+    } else {
+    window.alert('Directions request failed due to ' + status);
+    }
+    });
     
   }
 
