@@ -24,10 +24,10 @@ export class MapPage {
   directionsService = new google.maps.DirectionsService;
   directionsDisplay = new google.maps.DirectionsRenderer;
   start: any; end: any;
-  // site = {
-  //   Lat : '13.7501304',
-  //   Lng: '100.5213145'
-  // };
+  site = {
+    Lat : '13.7501304',
+    Lng: '100.5213145'
+  };
   Pop: any;
 
   constructor(
@@ -37,13 +37,14 @@ export class MapPage {
     public db: AngularFireDatabase
     
   ) {
-   // this.db.list('site').push(this.site);
+  //  this.db.list('site').push(this.site);
   //  this.db.list('site').valueChanges().subscribe(
   //    data =>{
   //      console.log(data)
   //      this.Pop = data;
   //    }
   //  ) ;
+    
     this.start = new google.maps.LatLng(13.8262621, 100.5147228);
     this.end = new google.maps.LatLng(13.7591387, 100.566437);
     this.geocoder = new google.maps.Geocoder;
@@ -61,19 +62,22 @@ export class MapPage {
   }
 
 
+
   ionViewDidEnter(){
     this.getPosition();
-    // this.getDataFromFirebase();
+    this.getDataFromFirebase();
   }
 
-  getDataFromFirebase():any{
-    this.db.list('site/Lat').valueChanges().subscribe(
+  getDataFromFirebase(){
+    this.db.list('/Station/').valueChanges().subscribe(
       data => {
-        console.log(data)
-        this.Pop = data
+        console.log(JSON.stringify(data))
+        this.Pop = data;
       }
-    )
-  }
+      ,(err)=>{
+        console.log("probleme : ", err)
+     });
+    }
 
   getPosition():any{
     this.geolocation.getCurrentPosition().then(response => {
@@ -87,7 +91,7 @@ export class MapPage {
   loadMap(position: Geoposition){
     let latitude = position.coords.latitude;
     let longitude = position.coords.longitude;
-    console.log(latitude, longitude);
+    // console.log(latitude, longitude);
     
     // create a new map by passing HTMLElement
     let mapEle: HTMLElement = document.getElementById('map');
