@@ -1,8 +1,9 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, Testability } from '@angular/core';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { LoadingController, Item } from 'ionic-angular';
 //import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import { AngularFireDatabase } from 'angularfire2/database';
+import { database } from 'firebase';
 
 declare var google;
 
@@ -11,7 +12,7 @@ declare var google;
   templateUrl: 'map.html'
 })
 export class MapPage {
-
+  
   map: any;
   markers: any;
   autocomplete: any;
@@ -29,93 +30,226 @@ export class MapPage {
     Lng: '100.5213145'
   };
   Pop: any;
-
+  kartoon: any;
+  item: any;
+  // stLatLng: string;
+  
   constructor(
     public zone: NgZone,
     public geolocation: Geolocation,
     public loadingCtrl: LoadingController,
-    public db: AngularFireDatabase
+    public db: AngularFireDatabase, 
     
-  ) {
-  //  this.db.list('site').push(this.site);
-  //  this.db.list('site').valueChanges().subscribe(
-  //    data =>{
-  //      console.log(data)
-  //      this.Pop = data;
-  //    }
-  //  ) ;
     
-    this.start = new google.maps.LatLng(13.8262621, 100.5147228);
-    this.end = new google.maps.LatLng(13.7591387, 100.566437);
-    this.geocoder = new google.maps.Geocoder;
-    let elem = document.createElement("div")
-    this.GooglePlaces = new google.maps.places.PlacesService(elem);
-    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
-    this.autocomplete = {
-      input: ''
-    }
-    
-    this.autocompleteItems = [];
-    this.markers = [];
-    this.loading = this.loadingCtrl.create();
-    // this.Pop = 'Popppp';
-  }
+    ) {
+      // test push data
+      //  this.db.list('site').push(this.site);
+      //  this.db.list('site').valueChanges().subscribe(
+        //    data =>{
+          //      console.log(data)
+          //      this.Pop = data;
+          //    }
+          //  ) ;
+      // endtest
+          
+          this.start = new google.maps.LatLng(13.8262621, 100.5147228);
+          this.end = new google.maps.LatLng(13.7627997,100.5348922);
+          this.geocoder = new google.maps.Geocoder;
+          let elem = document.createElement("div")
+          this.GooglePlaces = new google.maps.places.PlacesService(elem);
+          this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+          this.autocomplete = {
+            input: ''
+          }
+          
+          this.autocompleteItems = [];
+          this.markers = [];
+          this.loading = this.loadingCtrl.create();
+        }
+        
+        
+        
+        ionViewDidEnter(){
+          this.getPosition();
+          // this.getDataFromFirebase();
+        } 
+        getDataFromFirebase(){return new Promise((resolve, reject) => {
+          this.db.list('/Station/').valueChanges()
+          .subscribe(
+            data => {
+              this.Pop = data;
+              resolve(this.Pop)  
 
+            },
+            );
+          });
+        }
+        
+        // old getdata fn
+        // getDataFromFirebase(){
+          //    this.db.list('/Station/1001').valueChanges().subscribe(
+            //      data => {
+              //       // console.log(JSON.stringify(data));
+              //       this.Pop = data as any;
+              //       // console.log(this.Pop);
+              //       this.stLat = this.Pop as any[1];
+              //       // this.stLng = this.Pop[2];
+              //       return this.stLat
+              //     }
+              //     )
+              //     console.log(this.stLat)
+              //     }
+              
+              
+              getPosition():any{
+                this.geolocation.getCurrentPosition().then(response => {
+                  this.loadMap(response);
+                })
+                .catch(error =>{
+                  console.log(error);
+                })
+              }
+              // getData(){
+              //   this.getDataFromFirebase().then(data =>{
+              //     //  item = data as any;
+              //     this.Pop = data as any;
+              //     this.stLat = this.Pop[0].Lat;
+              //     console.log(this.stLat)  ;
 
+              //   })
+              // }
 
-  ionViewDidEnter(){
-    this.getPosition();
-    this.getDataFromFirebase();
-  }
+        loadMap(position: Geoposition){
+          let latitude = position.coords.latitude;
+          let longitude = position.coords.longitude;
+          // console.log(latitude, longitude);
+          
+          // create a new map by passing HTMLElement
+          let mapEle: HTMLElement = document.getElementById('map');
+          
+          // create LatLng object
+          let myLatLng = {lat: latitude, lng: longitude};
+          this.start = myLatLng;
+          // create map
+          this.map = new google.maps.Map(mapEle, {
+            center: myLatLng,
+            zoom: 12
+          });
+          google.maps.event.addListenerOnce(this.map, 'idle', () => {
+           
+            this.getDataFromFirebase().then(data =>{
+              //  item = data as any;
+              this.Pop = data as any;
+              
+              console.log(this.Pop);
+               
+              let marker1  = new google.maps.Marker({
+                    position: myLatLng,
+                      map: this.map,
+                      title: 'AQUI ESTOY!'
+                    });
+                //  this.db.list('/Station/1001').valueChanges().subscribe(
+                  //  data => {
+                    //   console.log(JSON.stringify(data));
+                    //   this.Pop = data;
+                    //   console.log(this.Pop);
+                    //   this.stLat = this.Pop[1];
+                    //   this.stLng = this.Pop[2];
+                    // this.getData(); 
 
-  getDataFromFirebase(){
-    this.db.list('/Station/').valueChanges().subscribe(
-      data => {
-        console.log(JSON.stringify(data))
-        this.Pop = data;
-      }
-      ,(err)=>{
-        console.log("probleme : ", err)
-     });
-    }
+        let bVicLatLng = {lat: this.Pop[0].lat, lng: this.Pop[0].lng};
+        let bPhaLatLng = {lat: this.Pop[1].lat, lng: this.Pop[1].lng};
+        let bRatLatLng = {lat: this.Pop[2].lat, lng: this.Pop[2].lng};
+        let bSiaLatLng = {lat: this.Pop[3].lat, lng: this.Pop[3].lng};
+        let bChiLatLng = {lat: this.Pop[4].lat, lng: this.Pop[4].lng};
+        let bPhlLatLng = {lat: this.Pop[5].lat, lng: this.Pop[5].lng};
+        let bNanLatLng = {lat: this.Pop[6].lat, lng: this.Pop[6].lng};
+        let bAsoLatLng = {lat: this.Pop[7].lat, lng: this.Pop[7].lng};
+        let mRamLatLng = {lat: this.Pop[8].lat, lng: this.Pop[8].lng};
+        let mPheLatLng = {lat: this.Pop[9].lat, lng: this.Pop[9].lng};
+        let mSukLatLng = {lat: this.Pop[10].lat, lng: this.Pop[10].lng};
+        let aPhaLatLng = {lat: this.Pop[11].lat, lng: this.Pop[11].lng};
+        let aRatLatLng = {lat: this.Pop[12].lat, lng: this.Pop[12].lng};
+        let aMukLatLng = {lat: this.Pop[13].lat, lng: this.Pop[13].lng};
 
-  getPosition():any{
-    this.geolocation.getCurrentPosition().then(response => {
-      this.loadMap(response);
-    })
-    .catch(error =>{
-      console.log(error);
-    })
-  }
+        // console.log(bVicLatLng);
 
-  loadMap(position: Geoposition){
-    let latitude = position.coords.latitude;
-    let longitude = position.coords.longitude;
-    // console.log(latitude, longitude);
-    
-    // create a new map by passing HTMLElement
-    let mapEle: HTMLElement = document.getElementById('map');
-  
-    // create LatLng object
-    let myLatLng = {lat: latitude, lng: longitude};
-    this.start = myLatLng;
-    // create map
-    this.map = new google.maps.Map(mapEle, {
-      center: myLatLng,
-      zoom: 12
-    });
-  
-   google.maps.event.addListenerOnce(this.map, 'idle', () => {
-    let marker = new google.maps.Marker({
-      position: myLatLng,
-        map: this.map,
-        title: 'AQUI ESTOY!'
+        let bVicMark = new google.maps.Marker({
+          position : bVicLatLng,          
+          map: this.map,
+          title: 'Victory Monument' 
+        });
+        let bPhaMark = new google.maps.Marker({
+          position : bPhaLatLng,          
+          map: this.map,
+          title: 'Phaya Thai' 
+        });
+        let bRatMark = new google.maps.Marker({
+          position : bRatLatLng,          
+          map: this.map,
+          title: 'Ratchathewi' 
+        });
+        let bSiaMark = new google.maps.Marker({
+          position : bSiaLatLng,          
+          map: this.map,
+          title: 'Siam' 
+        });
+        let bChiMark = new google.maps.Marker({
+          position : bChiLatLng,          
+          map: this.map,
+          title: 'Chidlom' 
+        });
+        let bPhlMark = new google.maps.Marker({
+          position : bPhlLatLng,          
+          map: this.map,
+          title: 'Phloen Chit' 
+        });
+        let bNanMark = new google.maps.Marker({
+          position : bNanLatLng,          
+          map: this.map,
+          title: 'Nana' 
+        });
+        let bAsoMark = new google.maps.Marker({
+          position : bAsoLatLng,          
+          map: this.map,
+          title: 'Asok' 
+        });
+        let mRamMark = new google.maps.Marker({
+          position : mRamLatLng,          
+          map: this.map,
+          title: 'Victory Monument' 
+        });
+        let  mPheMark = new google.maps.Marker({
+          position :  mPheLatLng,          
+          map: this.map,
+          title: 'Phetchaburi' 
+        });
+        let mSukMark = new google.maps.Marker({
+          position : mSukLatLng,          
+          map: this.map,
+          title: 'Sukumvit' 
+        });
+        let aPhaMark = new google.maps.Marker({
+          position : aPhaLatLng,          
+          map: this.map,
+          title: 'Phyathai' 
+        });
+        let aRatMark = new google.maps.Marker({
+          position :  aRatLatLng,          
+          map: this.map,
+          title: 'Ratchaprarop' 
+        });
+        let  aMukMark = new google.maps.Marker({
+          position : aMukLatLng,          
+          map: this.map,
+          title: 'Mukason' 
+        });
+        mapEle.classList.add('show-map');
       });
-      mapEle.classList.add('show-map');
-    });
-    
-    
-  }
+    })
+    // });
+      
+}
 
   updateSearchResults(){
     if (this.autocomplete.input == '') {
@@ -150,6 +284,7 @@ export class MapPage {
           map: this.map
         });
         console.log(this.end);
+        this.clearMarkers();
         this.markers.push(marker);
         this.map.setCenter(results[0].geometry.location);
         // this.end = results[0].geometry.location;
