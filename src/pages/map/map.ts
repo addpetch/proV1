@@ -172,6 +172,37 @@ export class MapPage {
         let aRatLatLng = {lat: this.Pop[12].lat, lng: this.Pop[12].lng};
         let aMukLatLng = {lat: this.Pop[13].lat, lng: this.Pop[13].lng};
 
+
+        // test compare Locate
+        let CVicLat = latitude - this.Pop[0].lat;
+        if (CVicLat<0) {
+          CVicLat = CVicLat*-1;
+        } 
+        console.log(CVicLat);
+        let CVicLng = longitude - this.Pop[0].lng;
+        if (CVicLng<0) {
+          CVicLng = CVicLng*-1;
+        }
+        console.log(CVicLng);
+        let CPhaLat = latitude - this.Pop[1].lat;
+        if (CPhaLat<0) {
+          CPhaLat = CPhaLat*-1;
+        } 
+        console.log(CPhaLat);
+        let CPhaLng = longitude - this.Pop[1].lng;
+        if (CPhaLng<0) {
+          CPhaLng = CPhaLng*-1;
+        } 
+        console.log(CPhaLng);
+
+        if ((CVicLat<CPhaLat)&&(CVicLng<CPhaLng)) {
+          console.log('Vic Closer') ;         
+        } else {
+          console.log('Pha Closer') ; 
+        }
+
+        // 
+
         // console.log(bVicLatLng);
 
         let bVicMark = new google.maps.Marker({
