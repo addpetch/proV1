@@ -173,112 +173,147 @@ export class MapPage {
         let aMukLatLng = {lat: this.Pop[13].lat, lng: this.Pop[13].lng};
 
 
-        // test compare Locate
-        let CVicLat = latitude - this.Pop[0].lat;
-        if (CVicLat<0) {
-          CVicLat = CVicLat*-1;
-        } 
-        console.log(CVicLat);
-        let CVicLng = longitude - this.Pop[0].lng;
-        if (CVicLng<0) {
-          CVicLng = CVicLng*-1;
-        }
-        console.log(CVicLng);
-        let CPhaLat = latitude - this.Pop[1].lat;
-        if (CPhaLat<0) {
-          CPhaLat = CPhaLat*-1;
-        } 
-        console.log(CPhaLat);
-        let CPhaLng = longitude - this.Pop[1].lng;
-        if (CPhaLng<0) {
-          CPhaLng = CPhaLng*-1;
-        } 
-        console.log(CPhaLng);
+          // test compare Locate
+          let CVicLat = latitude - this.Pop[0].lat;
+          let CVicLng = longitude - this.Pop[0].lng;
+          let CPhaLat = latitude - this.Pop[1].lat;
+          let CPhaLng = longitude - this.Pop[1].lng;
+          let CRatLat = latitude - this.Pop[2].lat;
+          let CRatLng = longitude - this.Pop[2].lng;
 
-        if ((CVicLat<CPhaLat)&&(CVicLng<CPhaLng)) {
-          console.log('Vic Closer') ;         
-        } else {
-          console.log('Pha Closer') ; 
-        }
+          let CRamLat = latitude - this.Pop[8].lat;
+          let CRamLng = longitude - this.Pop[8].lng;
+  
+  
+          if (CVicLat<0) {
+            CVicLat = CVicLat*-1;
+          } 
+          console.log(CVicLat);
+          if (CVicLng<0) {
+            CVicLng = CVicLng*-1;
+          }
+          console.log(CVicLng);
+          if (CPhaLat<0) {
+            CPhaLat = CPhaLat*-1;
+          } 
+          console.log(CPhaLat);
+          if (CPhaLng<0) {
+            CPhaLng = CPhaLng*-1;
+          } 
+          console.log(CPhaLng);
+          if (CRatLat<0) {
+            CRatLat = CRatLat*-1;
+          }
+          console.log(CRatLat);
+          if (CRatLng<0) {
+            CRatLng = CRatLng*-1;
+          }
+          console.log(CRatLng);
 
-        // 
+          if (CRamLat<0) {
+            CRamLat = CRamLat*-1;
+          }
+          console.log(CRamLat);
+          if (CRamLng<0) {
+            CRamLng = CRamLng*-1;
+          }
+          console.log(CRamLng);
 
-        // console.log(bVicLatLng);
+  
+  
+          if ((CVicLat>CPhaLat)&&(CVicLng>CPhaLng)) {
+            this.end = bPhaLatLng;
+            console.log('Pha Closer') ;         
+          } else if ((CRatLat>CVicLat)&&(CRatLng>CVicLng)) {
+            this.end = bVicLatLng;
+            console.log('Vic Closer') ; 
+          } else if ((CRamLat>CRatLat)&&(CRamLng>CRatLng)) {
+            this.end = bRatLatLng;
+          } else {
+            this.end = mRamLatLng;
+          }
+          console.log((CRamLat>CRatLat));
+          console.log((CRamLng>CRatLng));
 
-        let bVicMark = new google.maps.Marker({
-          position : bVicLatLng,          
-          map: this.map,
-          title: 'Victory Monument' 
+  
+          // 
+  
+          // console.log(bVicLatLng);
+  
+          // let bVicMark = new google.maps.Marker({
+          //   position : bVicLatLng,          
+          //   map: this.map,
+          //   title: 'Victory Monument' 
+          // });
+          // let bPhaMark = new google.maps.Marker({
+          //   position : bPhaLatLng,          
+          //   map: this.map,
+          //   title: 'Phaya Thai' 
+          // });
+          // let bRatMark = new google.maps.Marker({
+          //   position : bRatLatLng,          
+          //   map: this.map,
+          //   title: 'Ratchathewi' 
+          // });
+          // let bSiaMark = new google.maps.Marker({
+          //   position : bSiaLatLng,          
+          //   map: this.map,
+          //   title: 'Siam' 
+          // });
+          // let bChiMark = new google.maps.Marker({
+          //   position : bChiLatLng,          
+          //   map: this.map,
+          //   title: 'Chidlom' 
+          // });
+          // let bPhlMark = new google.maps.Marker({
+          //   position : bPhlLatLng,          
+          //   map: this.map,
+          //   title: 'Phloen Chit' 
+          // });
+          // let bNanMark = new google.maps.Marker({
+          //   position : bNanLatLng,          
+          //   map: this.map,
+          //   title: 'Nana' 
+          // });
+          // let bAsoMark = new google.maps.Marker({
+          //   position : bAsoLatLng,          
+          //   map: this.map,
+          //   title: 'Asok' 
+          // });
+          // let mRamMark = new google.maps.Marker({
+          //   position : mRamLatLng,          
+          //   map: this.map,
+          //   title: 'Victory Monument' 
+          // });
+          // let  mPheMark = new google.maps.Marker({
+          //   position :  mPheLatLng,          
+          //   map: this.map,
+          //   title: 'Phetchaburi' 
+          // });
+          // let mSukMark = new google.maps.Marker({
+          //   position : mSukLatLng,          
+          //   map: this.map,
+          //   title: 'Sukumvit' 
+          // });
+          // let aPhaMark = new google.maps.Marker({
+          //   position : aPhaLatLng,          
+          //   map: this.map,
+          //   title: 'Phyathai' 
+          // });
+          // let aRatMark = new google.maps.Marker({
+          //   position :  aRatLatLng,          
+          //   map: this.map,
+          //   title: 'Ratchaprarop' 
+          // });
+          // let  aMukMark = new google.maps.Marker({
+          //   position : aMukLatLng,          
+          //   map: this.map,
+          //   title: 'Mukason' 
+          // });
+          mapEle.classList.add('show-map');
         });
-        let bPhaMark = new google.maps.Marker({
-          position : bPhaLatLng,          
-          map: this.map,
-          title: 'Phaya Thai' 
-        });
-        let bRatMark = new google.maps.Marker({
-          position : bRatLatLng,          
-          map: this.map,
-          title: 'Ratchathewi' 
-        });
-        let bSiaMark = new google.maps.Marker({
-          position : bSiaLatLng,          
-          map: this.map,
-          title: 'Siam' 
-        });
-        let bChiMark = new google.maps.Marker({
-          position : bChiLatLng,          
-          map: this.map,
-          title: 'Chidlom' 
-        });
-        let bPhlMark = new google.maps.Marker({
-          position : bPhlLatLng,          
-          map: this.map,
-          title: 'Phloen Chit' 
-        });
-        let bNanMark = new google.maps.Marker({
-          position : bNanLatLng,          
-          map: this.map,
-          title: 'Nana' 
-        });
-        let bAsoMark = new google.maps.Marker({
-          position : bAsoLatLng,          
-          map: this.map,
-          title: 'Asok' 
-        });
-        let mRamMark = new google.maps.Marker({
-          position : mRamLatLng,          
-          map: this.map,
-          title: 'Victory Monument' 
-        });
-        let  mPheMark = new google.maps.Marker({
-          position :  mPheLatLng,          
-          map: this.map,
-          title: 'Phetchaburi' 
-        });
-        let mSukMark = new google.maps.Marker({
-          position : mSukLatLng,          
-          map: this.map,
-          title: 'Sukumvit' 
-        });
-        let aPhaMark = new google.maps.Marker({
-          position : aPhaLatLng,          
-          map: this.map,
-          title: 'Phyathai' 
-        });
-        let aRatMark = new google.maps.Marker({
-          position :  aRatLatLng,          
-          map: this.map,
-          title: 'Ratchaprarop' 
-        });
-        let  aMukMark = new google.maps.Marker({
-          position : aMukLatLng,          
-          map: this.map,
-          title: 'Mukason' 
-        });
-        mapEle.classList.add('show-map');
-      });
-    })
-    // });
+      })
+      // });
       
 }
 
