@@ -180,9 +180,28 @@ export class MapPage {
           let CPhaLng = longitude - this.Pop[1].lng;
           let CRatLat = latitude - this.Pop[2].lat;
           let CRatLng = longitude - this.Pop[2].lng;
-
+          let CSiaLat = latitude - this.Pop[3].lat;
+          let CSiaLng = longitude - this.Pop[3].lng;
+          let CChiLat = latitude - this.Pop[4].lat;
+          let CChiLng = longitude - this.Pop[4].lng;
+          let CPhlLat = latitude - this.Pop[5].lat;
+          let CPhlLng = longitude - this.Pop[5].lng;
+          let CNanLat = latitude - this.Pop[6].lat;
+          let CNanLng = longitude - this.Pop[6].lng;
+          let CAsoLat = latitude - this.Pop[7].lat;
+          let CAsoLng = longitude - this.Pop[7].lng;
           let CRamLat = latitude - this.Pop[8].lat;
           let CRamLng = longitude - this.Pop[8].lng;
+          let CPheLat = latitude - this.Pop[9].lat;
+          let CPheLng = longitude - this.Pop[9].lng;
+          let CSukLat = latitude - this.Pop[10].lat;
+          let CSukLng = longitude - this.Pop[10].lng;
+          let CaPhaLat = latitude - this.Pop[11].lat;
+          let CaPhaLng = longitude - this.Pop[11].lng;
+          let CaRatLat = latitude - this.Pop[12].lat;
+          let CaRatLng = longitude - this.Pop[12].lng;
+          let CMukLat = latitude - this.Pop[13].lat;
+          let CMukLng = longitude - this.Pop[13].lng;
   
   
           if (CVicLat<0) {
@@ -209,7 +228,46 @@ export class MapPage {
             CRatLng = CRatLng*-1;
           }
           console.log(CRatLng);
-
+          if (CSiaLat<0) {
+            CSiaLat = CSiaLat*-1;
+          }
+          console.log(CSiaLat);
+          if (CSiaLng<0) {
+            CSiaLng = CSiaLng*-1;
+          }
+          console.log(CSiaLng);
+          if (CChiLat<0) {
+            CChiLat = CChiLat*-1;
+          }
+          console.log(CChiLat);
+          if (CChiLng<0) {
+            CChiLng = CChiLng*-1;
+          }
+          console.log(CChiLng);
+          if (CPhlLat<0) {
+            CPhlLat = CPhlLat*-1;
+          }
+          console.log(CPhlLat);
+          if (CPhlLng<0) {
+            CPhlLng = CPhlLng*-1;
+          }
+          console.log(CPhlLng);
+          if (CNanLat<0) {
+            CNanLat = CNanLat*-1;
+          }
+          console.log(CNanLat);
+          if (CNanLng<0) {
+            CNanLng = CNanLng*-1;
+          }
+          console.log(CNanLng);
+          if (CAsoLat<0) {
+            CAsoLat = CAsoLat*-1;
+          }
+          console.log(CAsoLat);
+          if (CAsoLng<0) {
+            CAsoLng = CAsoLng*-1;
+          }
+          console.log(CAsoLng);
           if (CRamLat<0) {
             CRamLat = CRamLat*-1;
           }
@@ -218,22 +276,79 @@ export class MapPage {
             CRamLng = CRamLng*-1;
           }
           console.log(CRamLng);
-
+          if (CPheLat<0) {
+            CPheLat = CPheLat*-1;
+          }
+          console.log(CPheLat);
+          if (CPheLng<0) {
+            CPheLng = CPheLng*-1;
+          }
+          console.log(CPheLng);
+          if (CSukLat<0) {
+            CSukLat = CSukLat*-1;
+          }
+          console.log(CSukLat);
+          if (CSukLng<0) {
+            CSukLng = CSukLng*-1;
+          }
+          console.log(CSukLng);
+          if (CaPhaLat<0) {
+            CaPhaLat = CaPhaLat*-1;
+          }
+          console.log(CaPhaLat);
+          if (CaPhaLng<0) {
+            CaPhaLng = CaPhaLng*-1;
+          }
+          console.log(CaPhaLng);
+          if (CaRatLat<0) {
+            CaRatLat = CaRatLat*-1;
+          }
+          console.log(CaRatLat);
+          if (CaRatLng<0) {
+            CaRatLng = CaRatLng*-1;
+          }
+          console.log(CaRatLng);
+          if (CMukLat<0) {
+            CMukLat = CMukLat*-1;
+          }
+          console.log(CMukLat);
+          if (CMukLng<0) {
+            CMukLng = CMukLng*-1;
+          }
+          console.log(CMukLng);
   
   
-          if ((CVicLat>CPhaLat)&&(CVicLng>CPhaLng)) {
-            this.end = bPhaLatLng;
-            console.log('Pha Closer') ;         
-          } else if ((CRatLat>CVicLat)&&(CRatLng>CVicLng)) {
+          if ((CPhaLat>CVicLat)&&(CPhaLng>CVicLng)) {
             this.end = bVicLatLng;
             console.log('Vic Closer') ; 
-          } else if ((CRamLat>CRatLat)&&(CRamLng>CRatLng)) {
+          } else if ((CRatLat>CPhaLat)&&(CRatLng>CPhaLat)) {
+            this.end = bPhaLatLng;
+            console.log('Pha Closer') ;         
+          } else if ((CSiaLat>CRatLat)&&(CSiaLng>CRatLng)) {
             this.end = bRatLatLng;
-          } else {
+          } else if((CChiLat>CSiaLat)&&(CChiLng>CSiaLng)){
+            this.end = bSiaLatLng;
+          } else if((CPhlLat>CChiLat)&&(CPhlLng>CChiLng)){
+            this.end = bChiLatLng;
+          } else if((CNanLat>CPhlLat)&&(CNanLng>CPhlLng)){
+            this.end = bPhlLatLng;
+          } else if((CAsoLat>CNanLat)&&(CAsoLng>CNanLng)){
+            this.end = bNanLatLng;
+          } else if((CRamLat>CAsoLat)&&(CRamLng>CAsoLng)){
+            this.end = bAsoLatLng;
+          } else if((CPheLat>CRamLat)&&(CPheLng>CRamLng)){
             this.end = mRamLatLng;
+          } else if((CSukLat>CPheLat)&&(CSukLng>CPheLng)){
+            this.end = mPheLatLng;
+          } else if((CaPhaLat>CSukLat)&&(CaPhaLng>CSukLng)){
+            this.end = mSukLatLng;
+          } else if((CaRatLat>CaPhaLat)&&(CaRatLng>CaPhaLng)){
+            this.end = aPhaLatLng;
+          } else if((CMukLat>CaRatLat)&&(CMukLng>CaRatLng)){
+            this.end = aRatLatLng;
+          } else{
+            this.end = aMukLatLng;
           }
-          console.log((CRamLat>CRatLat));
-          console.log((CRamLng>CRatLng));
 
   
           // 
@@ -363,7 +478,7 @@ export class MapPage {
     this.directionsService.route({
     origin:  this.start,
     destination: this.end,
-    travelMode: 'DRIVING'},
+    travelMode: 'DRIVING',},
     (response, status) => {
     if (status === 'OK') {
     this.directionsDisplay.setDirections(response);
