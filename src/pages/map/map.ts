@@ -52,8 +52,6 @@ export class MapPage {
           //  ) ;
       // endtest
           
-          this.start = new google.maps.LatLng(13.8262621, 100.5147228);
-          this.end = new google.maps.LatLng(13.7627997,100.5348922);
           this.geocoder = new google.maps.Geocoder;
           let elem = document.createElement("div")
           this.GooglePlaces = new google.maps.places.PlacesService(elem);
@@ -75,7 +73,7 @@ export class MapPage {
           // this.getDataFromFirebase();
           
         } 
-
+        // Calculate Distance
         calculateDistance(lat1:number,lat2:number,long1:number,long2:number){
           let p = 0.017453292519943295;    // Math.PI / 180
           let c = Math.cos;
@@ -95,21 +93,6 @@ export class MapPage {
             );
           });
         }
-        
-        // old getdata fn
-        // getDataFromFirebase(){
-          //    this.db.list('/Station/1001').valueChanges().subscribe(
-            //      data => {
-              //       // console.log(JSON.stringify(data));
-              //       this.Pop = data as any;
-              //       // console.log(this.Pop);
-              //       this.stLat = this.Pop as any[1];
-              //       // this.stLng = this.Pop[2];
-              //       return this.stLat
-              //     }
-              //     )
-              //     console.log(this.stLat)
-              //     }
               
               
               getPosition():any{
@@ -121,20 +104,9 @@ export class MapPage {
                 })
               }
 
-              // getData(){
-              //   this.getDataFromFirebase().then(data =>{
-              //     //  item = data as any;
-              //     this.Pop = data as any;
-              //     this.stLat = this.Pop[0].Lat;
-              //     console.log(this.stLat)  ;
-
-              //   })
-              // }
-
         loadMap(position: Geoposition){
           let latitude = position.coords.latitude;
           let longitude = position.coords.longitude;
-          // console.log(latitude, longitude);
           
           // create a new map by passing HTMLElement
           let mapEle: HTMLElement = document.getElementById('map');
@@ -150,58 +122,27 @@ export class MapPage {
           google.maps.event.addListenerOnce(this.map, 'idle', () => {
            
             this.getDataFromFirebase().then(data =>{
-              //  item = data as any;
+              
               this.Pop = data as any;
               
-              console.log(this.Pop);
+              // console.log(this.Pop);
                
               let marker1  = new google.maps.Marker({
                     position: myLatLng,
                       map: this.map,
                       title: 'AQUI ESTOY!'
                     });
-                //  this.db.list('/Station/1001').valueChanges().subscribe(
-                  //  data => {
-                    //   console.log(JSON.stringify(data));
-                    //   this.Pop = data;
-                    //   console.log(this.Pop);
-                    //   this.stLat = this.Pop[1];
-                    //   this.stLng = this.Pop[2];
-                    // this.getData(); 
-
-              let bVicLatLng = {lat: this.Pop[0].lat, lng: this.Pop[0].lng};
-              let bPhaLatLng = {lat: this.Pop[1].lat, lng: this.Pop[1].lng};
-              let bRatLatLng = {lat: this.Pop[2].lat, lng: this.Pop[2].lng};
-              let bSiaLatLng = {lat: this.Pop[3].lat, lng: this.Pop[3].lng};
-              let bChiLatLng = {lat: this.Pop[4].lat, lng: this.Pop[4].lng};
-              let bPhlLatLng = {lat: this.Pop[5].lat, lng: this.Pop[5].lng};
-              let bNanLatLng = {lat: this.Pop[6].lat, lng: this.Pop[6].lng};
-              let bAsoLatLng = {lat: this.Pop[7].lat, lng: this.Pop[7].lng};
-              let mRamLatLng = {lat: this.Pop[8].lat, lng: this.Pop[8].lng};
-              let mPheLatLng = {lat: this.Pop[9].lat, lng: this.Pop[9].lng};
-              let mSukLatLng = {lat: this.Pop[10].lat, lng: this.Pop[10].lng};
-              let aPhaLatLng = {lat: this.Pop[11].lat, lng: this.Pop[11].lng};
-              let aRatLatLng = {lat: this.Pop[12].lat, lng: this.Pop[12].lng};
-              let aMukLatLng = {lat: this.Pop[13].lat, lng: this.Pop[13].lng};
-
 
               // test compare Locate
-              let compare = [
-                this.calculateDistance(this.start.lat,bVicLatLng.lat,this.start.lng,bVicLatLng.lng),
-                this.calculateDistance(this.start.lat,bPhaLatLng.lat,this.start.lng,bPhaLatLng.lng),
-                this.calculateDistance(this.start.lat,bRatLatLng.lat,this.start.lng,bRatLatLng.lng),
-                this.calculateDistance(this.start.lat,bSiaLatLng.lat,this.start.lng,bSiaLatLng.lng),
-                this.calculateDistance(this.start.lat,bChiLatLng.lat,this.start.lng,bChiLatLng.lng),
-                this.calculateDistance(this.start.lat,bPhlLatLng.lat,this.start.lng,bPhlLatLng.lng),
-                this.calculateDistance(this.start.lat,bNanLatLng.lat,this.start.lng,bNanLatLng.lng),
-                this.calculateDistance(this.start.lat,bAsoLatLng.lat,this.start.lng,bAsoLatLng.lng),
-                this.calculateDistance(this.start.lat,mRamLatLng.lat,this.start.lng,mRamLatLng.lng),
-                this.calculateDistance(this.start.lat,mPheLatLng.lat,this.start.lng,mPheLatLng.lng),
-                this.calculateDistance(this.start.lat,mSukLatLng.lat,this.start.lng,mSukLatLng.lng),
-                this.calculateDistance(this.start.lat,aPhaLatLng.lat,this.start.lng,aPhaLatLng.lng),
-                this.calculateDistance(this.start.lat,aRatLatLng.lat,this.start.lng,aRatLatLng.lng),
-                this.calculateDistance(this.start.lat,aMukLatLng.lat,this.start.lng,aMukLatLng.lng),
-              ]
+              let compare = [];
+
+                for (let index = 0; index < 14; index++) {
+                  
+                 compare[index] = this.calculateDistance(this.start.lat,this.Pop[index].lat,this.start.lng,this.Pop[index].lng)
+                  
+                }
+                // console.log(compare);
+              // mark End location
               let countconpare = 0;
               for (let index = 0; index < 14; index++) {
                 let compo = compare[index];
@@ -212,17 +153,15 @@ export class MapPage {
                   }
                   if (countconpare == 13){
                     this.end = {lat: this.Pop[index].lat,lng: this.Pop[index].lng};
-                    console.log(this.end);
+                    // console.log(this.end);
                   }
                 }
               }
           mapEle.classList.add('show-map');
         });
       })
-      // });
-      
+      // });      
 }
-
 
   updateSearchResults(){
     if (this.autocomplete.input == '') {
@@ -248,15 +187,11 @@ export class MapPage {
     
     this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
       if(status === 'OK' && results[0]){
-        // let position = {
-        //     lat: results[0].geometry.location.lat,
-        //     lng: results[0].geometry.location.lng
-        // };
         let marker = new google.maps.Marker({
           position: results[0].geometry.location,
           map: this.map
         });
-        console.log(this.end);
+        // console.log(this.end);
         this.clearMarkers();
         this.markers.push(marker);
         this.map.setCenter(results[0].geometry.location);
