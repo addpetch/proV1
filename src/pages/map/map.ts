@@ -29,6 +29,7 @@ export class MapPage {
     Lat : '13.7501304',
     Lng: '100.5213145'
   };
+  station: any;
   Pop: any;
   kartoon: any;
   item: any;
@@ -69,12 +70,11 @@ export class MapPage {
         
         ionViewDidEnter(){
           this.getPosition();
-          
           // this.getDataFromFirebase();
           
         } 
-        // Calculate Distance
-        calculateDistance(lat1:number,lat2:number,long1:number,long2:number){
+         // Calculate Distance
+         calculateDistance(lat1:number,lat2:number,long1:number,long2:number){
           let p = 0.017453292519943295;    // Math.PI / 180
           let c = Math.cos;
           let a = 0.5 - c((lat1-lat2) * p) / 2 + c(lat2 * p) *c((lat1) * p) * (1 - c(((long1- long2) * p))) / 2;
@@ -148,12 +148,11 @@ export class MapPage {
                 let compo = compare[index];
                 countconpare = 0;
                 for (let index1 = 0; index1 < 14; index1++) {
-                   if (compo<compare[index1]) {
+                   if (compo<compare[index1]) {
                     countconpare++;
                   }
                   if (countconpare == 13){
-                    this.end = {lat: this.Pop[index].lat,lng: this.Pop[index].lng};
-                    // console.log(this.end);
+                    this.station = {lat: this.Pop[index].lat,lng: this.Pop[index].lng};
                   }
                 }
               }
@@ -184,36 +183,63 @@ export class MapPage {
   selectSearchResult(item):any{
     this.clearMarkers();
     this.autocompleteItems = [];
+    console.log(this.station);
+    console.log(this.Pop);
+    let waypts = [{location: this.station,
+                  stopover: true}];
     
     this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
+      
       if(status === 'OK' && results[0]){
         let marker = new google.maps.Marker({
           position: results[0].geometry.location,
           map: this.map
         });
-        // console.log(this.end);
+        console.log(results[0]);
+        // console.log(results[0].geometry.bounds.ga.j);
+        // console.log(results[0].geometry.bounds.ma.j);        
+
         this.clearMarkers();
         this.markers.push(marker);
         this.map.setCenter(results[0].geometry.location);
-        // this.end = results[0].geometry.location;
+        this.end = {lat: results[0].geometry.viewport.ma.j,lng: results[0].geometry.viewport.ga.j};
+        console.log(this.end);
+
+
+        // // test direction
+        this.directionsDisplay.setMap(this.map);
+        this.directionsService.route({
+        origin:  this.start ,
+        destination: this.end,
+        // waypoints: waypts,
+        optimizeWaypoints: true,
+        travelMode: 'TRANSIT'},
+        (response, status) => {
+        if (status === 'OK') {
+        this.directionsDisplay.setDirections(response);
+        } else {
+        window.alert('Directions request failed due to ' + status);
+        }
+        });
+
+        // this.directionsService.route({
+        //   origin:  this.station,
+        //   destination: this.end,
+        //   // waypoints: waypts,
+        //   optimizeWaypoints: true,
+        //   travelMode: 'TRANSIT',},
+        //   (response, status) => {
+        //   if (status === 'OK') {
+        //   this.directionsDisplay.setDirections(response);
+        //   } else {
+        //   window.alert('Directions request failed due to ' + status);
+        //   }
+        //   });
       }
-      
     })
     
-    //test direction
-    this.directionsDisplay.setMap(this.map);
-    this.directionsService.route({
-    origin:  this.start,
-    destination: this.end,
-    travelMode: 'DRIVING',},
-    (response, status) => {
-    if (status === 'OK') {
-    this.directionsDisplay.setDirections(response);
-    } else {
-    window.alert('Directions request failed due to ' + status);
-    }
-    });
     
+
   }
 
   clearMarkers(){
@@ -257,8 +283,7 @@ export class MapPage {
       } else {
         window.alert('Directions request failed due to ' + status);
       }
-    })
-  }
-
+    })  
+  }  
   
 }
