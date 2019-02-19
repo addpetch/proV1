@@ -188,39 +188,95 @@ export class MapPage {
     let waypts = [{location: this.station,
                   stopover: true}];
     
+    
+
+
     this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
       
       if(status === 'OK' && results[0]){
         let marker = new google.maps.Marker({
-          position: results[0].geometry.location,
+          position: {lat: results[0].geometry.viewport.ma.j,lng: results[0].geometry.viewport.ga.j},
           map: this.map
         });
-        console.log(results[0]);
+        console.log(results[0].geometry.location);
         // console.log(results[0].geometry.bounds.ga.j);
         // console.log(results[0].geometry.bounds.ma.j);        
 
-        this.clearMarkers();
+        // this.clearMarkers();
         this.markers.push(marker);
         this.map.setCenter(results[0].geometry.location);
         this.end = {lat: results[0].geometry.viewport.ma.j,lng: results[0].geometry.viewport.ga.j};
         console.log(this.end);
 
+        var goo = google.maps,
+            map = new goo.Map(document.getElementById('map'), {
+              center: this.end,
+              zoom: 10
+            }),
+            App = {
+                        map: map,
+                        bounds            : new google.maps.LatLngBounds(),
+                        directionsService : new google.maps.DirectionsService(),    
+                        directionsDisplay1: new google.maps.DirectionsRenderer({
+                                              map: map,
+                                              preserveViewport: true,
+                                              suppressMarkers : true,
+                                              polylineOptions : {strokeColor:'red'},
+                                            }),
+                        directionsDisplay2: new google.maps.DirectionsRenderer({
+                                            map: map,
+                                            preserveViewport: true,
+                                            suppressMarkers: true,
+                                            polylineOptions: {
+                                              strokeColor: 'blue'
+                                            }
+                        }),
+        },
+        startLeg = {
+          origin: this.start,
+          destination: this.station,
+          travelMode: 'TRANSIT'
+        },
+        endLeg = {
+          origin: this.station,
+          destination: this.end,
+          travelMode: 'TRANSIT',
+          transitOptions: {
+            modes: ['TRAIN'],
+            routingPreference: 'FEWER_TRANSFERS'
+          },
+        };
 
-        // // test direction
-        this.directionsDisplay.setMap(this.map);
-        this.directionsService.route({
-        origin:  this.start ,
-        destination: this.end,
-        // waypoints: waypts,
-        optimizeWaypoints: true,
-        travelMode: 'TRANSIT'},
-        (response, status) => {
-        if (status === 'OK') {
-        this.directionsDisplay.setDirections(response);
-        } else {
-        window.alert('Directions request failed due to ' + status);
-        }
+        App.directionsService.route(startLeg, function(result, status){
+          if (status === 'OK') {
+            App.directionsDisplay1.setDirections(result);
+            App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
+          }
         });
+
+        App.directionsService.route(endLeg, function(result, status) {
+          if (status == google.maps.DirectionsStatus.OK) {
+            App.directionsDisplay2.setDirections(result);
+            App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
+          }
+        });
+
+
+        // // // test direction
+        this.directionsDisplay.setMap(this.map);
+        // this.directionsService.route({ 
+        // origin:  this.start ,
+        // destination: this.end,
+        // // waypoints: waypts,
+        // optimizeWaypoints: true,
+        // travelMode: 'TRANSIT'},
+        // (response, status) => {
+        // if (status === 'OK') {
+        // this.directionsDisplay.setDirections(response);
+        // } else {
+        // window.alert('Directions request failed due to ' + status);
+        // }
+        // });
 
         // this.directionsService.route({
         //   origin:  this.station,
