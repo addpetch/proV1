@@ -4,6 +4,7 @@ import { LoadingController, Item, Chip } from 'ionic-angular';
 //import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { database } from 'firebase';
+import { NavController } from 'ionic-angular';
 
 declare var google;
 
@@ -32,9 +33,14 @@ export class MapPage {
   Pop: any;
   kartoon: any;
   item: any;
+  drawerOptions: any;
   // stLatLng: string;
   
+
+ 
+
   constructor(
+    public navCtrl: NavController,
     public zone: NgZone,
     public geolocation: Geolocation,
     public loadingCtrl: LoadingController,
@@ -51,7 +57,12 @@ export class MapPage {
           //    }
           //  ) ;
       // endtest
-          
+      this.drawerOptions = {
+        handleHeight: 70,
+        thresholdFromBottom: 200,
+        thresholdFromTop: 200,
+        bounceBack: true
+    };
           this.geocoder = new google.maps.Geocoder;
           let elem = document.createElement("div")
           this.GooglePlaces = new google.maps.places.PlacesService(elem);
