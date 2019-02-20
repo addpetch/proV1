@@ -235,16 +235,18 @@ export class MapPage {
         startLeg = {
           origin: this.start,
           destination: this.station,
-          travelMode: 'TRANSIT'
+          travelMode: 'DRIVING'
         },
         endLeg = {
           origin: this.station,
           destination: this.end,
           travelMode: 'TRANSIT',
           transitOptions: {
-            modes: ['TRAIN'],
-            routingPreference: 'FEWER_TRANSFERS'
+            modes: ['TRAIN','SUBWAY'],
+            // routingPreference: 'LESS_WALKING',
+            routingPreference: 'FEWER_TRANSFERS',
           },
+          
         };
 
         App.directionsService.route(startLeg, function(result, status){
