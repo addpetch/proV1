@@ -67,8 +67,10 @@ export class ContentDrawer {
     if((newTop < this.thresholdTop && ev.additionalEvent === "panup") || bounceToTop){
 
       this.domCtrl.write(() => {
-        this.renderer.setElementStyle(this.element.nativeElement, 'transition', 'top 0.5s');
-        this.renderer.setElementStyle(this.element.nativeElement, 'top', '0px');
+        this.renderer.setElementStyle(this.element.nativeElement, 'top', this.platform.height() - this.handleHeight - 150 + 'px');
+        this.renderer.setElementStyle(this.element.nativeElement, 'padding-top', this.handleHeight + 'px');
+        
+       
       });
 
     } else if(((this.platform.height() - newTop) < this.thresholdBottom && ev.additionalEvent === "pandown") || bounceToBottom){
@@ -76,6 +78,7 @@ export class ContentDrawer {
       this.domCtrl.write(() => {
         this.renderer.setElementStyle(this.element.nativeElement, 'transition', 'top 0.5s');
         this.renderer.setElementStyle(this.element.nativeElement, 'top', this.platform.height() - this.handleHeight + 'px');
+        
       });
 
     } else {

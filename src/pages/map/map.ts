@@ -59,8 +59,8 @@ export class MapPage {
       // endtest
       this.drawerOptions = {
         handleHeight: 70,
-        thresholdFromBottom: 200,
-        thresholdFromTop: 200,
+        thresholdFromBottom: 100,
+        thresholdFromTop: 100,
         bounceBack: true
     };
           this.geocoder = new google.maps.Geocoder;
