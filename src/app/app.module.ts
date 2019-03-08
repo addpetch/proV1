@@ -21,13 +21,17 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireModule } from 'angularfire2';
 import { FIREBASE_CONFIG } from './firebase.credentials';
 // import { FirebaseService } from './../providers/firebase-service/firebase-service';
+import {  ErrorHandler } from '@angular/core';
+import {  IonicErrorHandler } from 'ionic-angular';
+import { ContentDrawer } from '../components/content-drawer/content-drawer';
 
 @NgModule({
   declarations: [
     MyApp,
     MapPage,
     TabsNavigationPage,
-    PlacesPage
+    PlacesPage,
+    ContentDrawer
   ],
   imports: [
     BrowserModule,
@@ -43,6 +47,7 @@ import { FIREBASE_CONFIG } from './firebase.credentials';
     TabsNavigationPage,
     PlacesPage
   ],
+  
   providers: [
     StatusBar,
     Connectivity,
