@@ -1,5 +1,9 @@
 import { Component, Input, ElementRef, Renderer } from '@angular/core';
 import { Platform, DomController } from 'ionic-angular';
+import { MapPage } from './../../pages/map/map'
+
+// declare var Pop :any;
+// declare var kartoon :any;
 
 @Component({
   selector: 'content-drawer',
@@ -13,6 +17,8 @@ export class ContentDrawer {
   bounceBack: boolean = true;
   thresholdTop: number = 200;
   thresholdBottom: number = 200;
+  Pop: MapPage["Pop"];
+  kartoon = MapPage['kartoon'];
 
   constructor(public element: ElementRef, public renderer: Renderer, public domCtrl: DomController, public platform: Platform) {
 
@@ -45,15 +51,17 @@ export class ContentDrawer {
     hammer.on('pan', (ev) => {
       this.handlePan(ev);
     });
-
+    
   }
-
+  
   handlePan(ev){
-
+    
     let newTop = ev.center.y;
-
+    
     let bounceToBottom = false;
     let bounceToTop = false;
+
+    console.log(this.Pop);
 
     if(this.bounceBack && ev.isFinal){
 
@@ -67,7 +75,7 @@ export class ContentDrawer {
     if((newTop < this.thresholdTop && ev.additionalEvent === "panup") || bounceToTop){
 
       this.domCtrl.write(() => {
-        this.renderer.setElementStyle(this.element.nativeElement, 'top', this.platform.height() - this.handleHeight - 150 + 'px');
+        this.renderer.setElementStyle(this.element.nativeElement, 'top', this.platform.height() - this.handleHeight - 500 + 'px');
         this.renderer.setElementStyle(this.element.nativeElement, 'padding-top', this.handleHeight + 'px');
         
        

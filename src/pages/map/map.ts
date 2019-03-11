@@ -31,22 +31,22 @@ export class MapPage {
     Lng: '100.5213145'
   };
   station: any;
-  Pop: any;
-  kartoon: any;
   item: any;
   drawerOptions: any;
+  
   // stLatLng: string;
   
-
- 
-
+  
+  
+  
   constructor(
     public navCtrl: NavController,
     public zone: NgZone,
     public geolocation: Geolocation,
     public loadingCtrl: LoadingController,
     public db: AngularFireDatabase, 
-    
+    public Pop: any,
+    public kartoon: any,
     
     ) {
       // test push data
@@ -59,7 +59,7 @@ export class MapPage {
           //  ) ;
       // endtest
       this.drawerOptions = {
-        handleHeight: 70,
+        handleHeight: 60,
         thresholdFromBottom: 100,
         thresholdFromTop: 100,
         bounceBack: true
@@ -78,14 +78,13 @@ export class MapPage {
         }
         
         
-        
         ionViewDidEnter(){
           this.getPosition();
           // this.getDataFromFirebase();
-          
+                   
         } 
-         // Calculate Distance
-         calculateDistance(lat1:number,lat2:number,long1:number,long2:number){
+        // Calculate Distance
+        calculateDistance(lat1:number,lat2:number,long1:number,long2:number){
           let p = 0.017453292519943295;    // Math.PI / 180
           let c = Math.cos;
           let a = 0.5 - c((lat1-lat2) * p) / 2 + c(lat2 * p) *c((lat1) * p) * (1 - c(((long1- long2) * p))) / 2;
@@ -104,17 +103,17 @@ export class MapPage {
             );
           });
         }
-              
-              
-              getPosition():any{
-                this.geolocation.getCurrentPosition().then(response => {
-                  this.loadMap(response);
-                })
-                .catch(error =>{
-                  console.log(error);
-                })
-              }
-
+        
+        
+        getPosition():any{
+          this.geolocation.getCurrentPosition().then(response => {
+            this.loadMap(response);
+          })
+          .catch(error =>{
+            console.log(error);
+          })
+        }
+        
         loadMap(position: Geoposition){
           let latitude = position.coords.latitude;
           let longitude = position.coords.longitude;
@@ -131,12 +130,17 @@ export class MapPage {
             zoom: 12
           });
           google.maps.event.addListenerOnce(this.map, 'idle', () => {
-           
+            
             this.getDataFromFirebase().then(data =>{
               
               this.Pop = data as any;
               
-              // console.log(this.Pop);
+              console.log(this.Pop);
+              this.Pop.map((data) =>{
+                console.log(data);
+                return this.kartoon = data; 
+              });
+              
                
               let marker1  = new google.maps.Marker({
                     position: myLatLng,
