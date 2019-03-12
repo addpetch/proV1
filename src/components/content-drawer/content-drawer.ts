@@ -1,13 +1,17 @@
 import { Component, Input, ElementRef, Renderer } from '@angular/core';
-import { Platform, DomController } from 'ionic-angular';
-import { MapPage } from './../../pages/map/map'
+import { Platform, DomController, NavParams, Alert } from 'ionic-angular';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { database } from 'firebase';
+import { NgModule } from '@angular/core';
+import { NavController } from 'ionic-angular';
 
-// declare var Pop :any;
-// declare var kartoon :any;
+
+
 
 @Component({
   selector: 'content-drawer',
-  templateUrl: 'content-drawer.html'
+  templateUrl: 'content-drawer.html',
+  
 })
 export class ContentDrawer {
 
@@ -17,15 +21,22 @@ export class ContentDrawer {
   bounceBack: boolean = true;
   thresholdTop: number = 200;
   thresholdBottom: number = 200;
-  Pop: MapPage["Pop"];
-  kartoon = MapPage['kartoon'];
+  Petch: any;
 
-  constructor(public element: ElementRef, public renderer: Renderer, public domCtrl: DomController, public platform: Platform) {
+  constructor(public element: ElementRef, public renderer: Renderer, public domCtrl: DomController, public platform: Platform,public navCtrl: NavController,public navParams: NavParams, ) {
+    
 
   }
+  
+  ionViewCanEnter(){
+    this.Petch = this.navParams.get("Petch");
+    console.log(this.Petch);
+  }
 
-  ngAfterViewInit() {
+  ngAfterContentInit() {
+    console.log(this.Petch);
 
+    
     if(this.options.handleHeight){
       this.handleHeight = this.options.handleHeight;
     }
@@ -50,6 +61,7 @@ export class ContentDrawer {
 
     hammer.on('pan', (ev) => {
       this.handlePan(ev);
+      // console.log(ev);
     });
     
   }
@@ -60,8 +72,7 @@ export class ContentDrawer {
     
     let bounceToBottom = false;
     let bounceToTop = false;
-
-    console.log(this.Pop);
+    
 
     if(this.bounceBack && ev.isFinal){
 
@@ -78,7 +89,6 @@ export class ContentDrawer {
         this.renderer.setElementStyle(this.element.nativeElement, 'top', this.platform.height() - this.handleHeight - 500 + 'px');
         this.renderer.setElementStyle(this.element.nativeElement, 'padding-top', this.handleHeight + 'px');
         
-       
       });
 
     } else if(((this.platform.height() - newTop) < this.thresholdBottom && ev.additionalEvent === "pandown") || bounceToBottom){

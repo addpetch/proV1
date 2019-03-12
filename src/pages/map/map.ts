@@ -1,10 +1,12 @@
 import { Component, NgZone, Testability } from '@angular/core';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
-import { LoadingController, Item, Chip } from 'ionic-angular';
+import { LoadingController, Item, Chip, Content } from 'ionic-angular';
 //import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { database } from 'firebase';
 import { NavController } from 'ionic-angular';
+import { ContentDrawer } from '../../components/content-drawer/content-drawer';
+import { map } from 'rxjs-compat/operator/map';
 
 declare var google;
 
@@ -33,7 +35,10 @@ export class MapPage {
   station: any;
   item: any;
   drawerOptions: any;
-  
+  public Pop: any;
+  public kartoon: any;
+  startgate: any;
+  gatedata: any;
   // stLatLng: string;
   
   
@@ -45,8 +50,7 @@ export class MapPage {
     public geolocation: Geolocation,
     public loadingCtrl: LoadingController,
     public db: AngularFireDatabase, 
-    public Pop: any,
-    public kartoon: any,
+  
     
     ) {
       // test push data
@@ -58,6 +62,8 @@ export class MapPage {
           //    }
           //  ) ;
       // endtest
+
+      
       this.drawerOptions = {
         handleHeight: 60,
         thresholdFromBottom: 100,
@@ -75,12 +81,28 @@ export class MapPage {
           this.autocompleteItems = [];
           this.markers = [];
           this.loading = this.loadingCtrl.create();
+          this.kartoon = this.startgate;
+          this.startgate = [];
+        }
+ 
+        ionViewDidLoad(){
+          console.log('aa');
+          // this.getDataFromFirebase().then(data =>{
+              
+          //   this.Pop = data as any;
+          //   this.navCtrl.push(ContentDrawer, {
+          //     Petch :this.Pop
+          //   });
+          // });
+          this.getPosition();
         }
         
-        
-        ionViewDidEnter(){
-          this.getPosition();
+        ionViewCanLeave(){
           // this.getDataFromFirebase();
+            this.startgate.map((data)=>{
+              console.log(data)
+              return this.gatedata = data;
+            })
                    
         } 
         // Calculate Distance
@@ -134,12 +156,11 @@ export class MapPage {
             this.getDataFromFirebase().then(data =>{
               
               this.Pop = data as any;
-              
-              console.log(this.Pop);
-              this.Pop.map((data) =>{
-                console.log(data);
-                return this.kartoon = data; 
+              this.navCtrl.push(ContentDrawer, {
+                Petch :this.Pop
               });
+              console.log(this.Pop);
+              
               
                
               let marker1  = new google.maps.Marker({
@@ -150,27 +171,59 @@ export class MapPage {
 
               // test compare Locate
               let compare = [];
-
+              let compare1 = [];
                 for (let index = 0; index < 14; index++) {
-                  
-                 compare[index] = this.calculateDistance(this.start.lat,this.Pop[index].lat,this.start.lng,this.Pop[index].lng)
-                  
+                  compare[index] = this.calculateDistance(this.start.lat,this.Pop[index].lat,this.start.lng,this.Pop[index].lng)
+                  // for (let index1 = 1; index1 < 7; index1++) {
+                  //   compare1[index] = this.calculateDistance(this.start.lat,this.Pop[index].gate['gate'+index1].lat,this.start.lng,this.Pop[index].gate['gate'+index1].lng)
+                  //   console.log(compare1[index]);                    
+                  // }
                 }
-                // console.log(compare);
+                console.log(this.start);
+                console.log(compare);
+                
               // mark End location
-              let countconpare = 0;
+              
               for (let index = 0; index < 14; index++) {
                 let compo = compare[index];
-                countconpare = 0;
+                let countconpare = 0;
                 for (let index1 = 0; index1 < 14; index1++) {
-                   if (compo<compare[index1]) {
+                  if (compo<compare[index1]) {
                     countconpare++;
                   }
                   if (countconpare == 13){
-                    this.station = {lat: this.Pop[index].lat,lng: this.Pop[index].lng};
+                    this.station = {lat: this.Pop[index].lat,lng: this.Pop[index].lng,gate: this.Pop[index].gate};
+                    for (let index2 = 1; index2 < 7; index2++) {
+                      compare1[index2] = this.calculateDistance(this.start.lat,this.Pop[index].gate['gate'+index2].lat,this.start.lng,this.Pop[index].gate['gate'+index2].lng)
+                    }
+                    // console.log(compare1);
+                    for (let index3 = 1; index3 < 7; index3++) {
+                      let compogate = compare1[index3];
+                      let countconpare1 = 0;
+                      // console.log(compogate+'compo');
+                      // console.log(countconpare1+'countstart');
+                      for (let index4 = 1; index4 < 7; index4++) {
+                        // console.log(index4+'i');
+                        if (compogate<compare1[index4]) {
+                          countconpare1++;
+                          // console.log(countconpare1+'count');
+                        }                 
+                        if (countconpare1 == 5) {
+                          this.startgate = {lat: this.Pop[index].gate['gate'+index3].lat,lng: this.Pop[index].gate['gate'+index3].lng,gate: this.Pop[index].gate['gate'+index3].description};
+                        }      
+                      }
+
+                    }
                   }
                 }
               }
+              this.navCtrl.push(MapPage, {
+                gatedata: this.startgate.gate
+              })
+              
+              console.log(this.startgate)
+              console.log(this.gatedata)
+              
           mapEle.classList.add('show-map');
         });
       })
@@ -199,7 +252,7 @@ export class MapPage {
     this.clearMarkers();
     this.autocompleteItems = [];
     console.log(this.station);
-    console.log(this.Pop);
+    // console.log(this.Pop);
     let waypts = [{location: this.station,
                   stopover: true}];
     
@@ -213,7 +266,7 @@ export class MapPage {
           position: {lat: results[0].geometry.viewport.ma.j,lng: results[0].geometry.viewport.ga.j},
           map: this.map
         });
-        console.log(results[0].geometry.location);
+        // console.log(results[0].geometry.location);
         // console.log(results[0].geometry.bounds.ga.j);
         // console.log(results[0].geometry.bounds.ma.j);        
 
