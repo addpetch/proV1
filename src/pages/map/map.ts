@@ -27,18 +27,22 @@ export class MapPage {
   Destination: any ='';
   directionsService = new google.maps.DirectionsService;
   directionsDisplay = new google.maps.DirectionsRenderer;
-  start: any; end: any;
   site = {
     Lat : '13.7501304',
     Lng: '100.5213145'
   };
-  station: any;
   item: any;
   drawerOptions: any;
   public Pop: any;
   public kartoon: any;
+  start: any; end: any;
+  stationstart: any;
+  stationend: any;
   startgate: any;
+  connectgate: any;
+  endgate: any;
   gatedata: any;
+  // endgate: { lat: any; lng: any; gate: any; };
   // stLatLng: string;
   
   
@@ -81,8 +85,8 @@ export class MapPage {
           this.autocompleteItems = [];
           this.markers = [];
           this.loading = this.loadingCtrl.create();
-          this.kartoon = this.startgate;
-          this.startgate = [];
+          // this.kartoon = this.startgate;
+          // this.startgate = [];
         }
  
         ionViewDidLoad(){
@@ -99,10 +103,13 @@ export class MapPage {
         
         ionViewCanLeave(){
           // this.getDataFromFirebase();
-            this.startgate.map((data)=>{
-              console.log(data)
-              return this.gatedata = data;
-            })
+            // this.startgate.map((data)=>{
+            //   console.log(data)
+            //   return this.gatedata = data;
+            // })
+            // this.endgate.map((data)=>{
+            //   console.log(data)
+            // })
                    
         } 
         // Calculate Distance
@@ -192,7 +199,8 @@ export class MapPage {
                     countconpare++;
                   }
                   if (countconpare == 13){
-                    this.station = {lat: this.Pop[index].lat,lng: this.Pop[index].lng,gate: this.Pop[index].gate};
+                    this.stationstart = {lat: this.Pop[index].lat,lng: this.Pop[index].lng};
+                    // ,gate: this.Pop[index].gate
                     for (let index2 = 1; index2 < 7; index2++) {
                       compare1[index2] = this.calculateDistance(this.start.lat,this.Pop[index].gate['gate'+index2].lat,this.start.lng,this.Pop[index].gate['gate'+index2].lng)
                     }
@@ -218,11 +226,15 @@ export class MapPage {
                 }
               }
               this.navCtrl.push(MapPage, {
-                gatedata: this.startgate.gate
+                gatedata: this.startgate.gate,
+                endgate: this.endgate
               })
-              
+              this.gatedata = this.startgate.gate;
+              // this.endgate = this.endgate;
               console.log(this.startgate)
               console.log(this.gatedata)
+              console.log(this.endgate)
+
               
           mapEle.classList.add('show-map');
         });
@@ -251,13 +263,12 @@ export class MapPage {
   selectSearchResult(item):any{
     this.clearMarkers();
     this.autocompleteItems = [];
-    console.log(this.station);
     // console.log(this.Pop);
-    let waypts = [{location: this.station,
+    let waypts = [{location: this.stationstart,
                   stopover: true}];
     
     
-
+    
 
     this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
       
@@ -269,13 +280,58 @@ export class MapPage {
         // console.log(results[0].geometry.location);
         // console.log(results[0].geometry.bounds.ga.j);
         // console.log(results[0].geometry.bounds.ma.j);        
-
+        
         // this.clearMarkers();
         this.markers.push(marker);
         this.map.setCenter(results[0].geometry.location);
         this.end = {lat: results[0].geometry.viewport.ma.j,lng: results[0].geometry.viewport.ga.j};
-        console.log(this.end);
 
+         // setstationend
+         let compare = [];
+         let compare1 = [];
+         for (let index = 0; index < 14; index++) {
+           compare[index] = this.calculateDistance(this.end.lat,this.Pop[index].lat,this.end.lng,this.Pop[index].lng)
+           // for (let index1 = 1; index1 < 7; index1++) {
+           //   compare1[index] = this.calculateDistance(this.start.lat,this.Pop[index].gate['gate'+index1].lat,this.start.lng,this.Pop[index].gate['gate'+index1].lng)
+           //   console.log(compare1[index]);                    
+           // }
+         }
+         
+         for (let index = 0; index < 14; index++) {
+           let compo = compare[index];
+           let countconpare = 0;
+           for (let index1 = 0; index1 < 14; index1++) {
+             if (compo<compare[index1]) {
+               countconpare++;
+             }
+             if (countconpare == 13){
+               this.stationend = {lat: this.Pop[index].lat,lng: this.Pop[index].lng};
+               for (let index2 = 1; index2 < 7; index2++) {
+                 compare1[index2] = this.calculateDistance(this.end.lat,this.Pop[index].gate['gate'+index2].lat,this.end.lng,this.Pop[index].gate['gate'+index2].lng)
+               }
+               // console.log(compare1);
+               for (let index3 = 1; index3 < 7; index3++) {
+                 let compogate = compare1[index3];
+                 let countconpare1 = 0;
+                //  console.log(compogate+'compo');
+                //  console.log(countconpare1+'countstart');
+                 for (let index4 = 1; index4 < 7; index4++) {
+                  //  console.log(index4+'i');
+                   if (compogate<compare1[index4]) {
+                     countconpare1++;
+                    //  console.log(countconpare1+'count');
+                   }                 
+                   if (countconpare1 == 5) {
+                     this.endgate = {lat: this.Pop[index].gate['gate'+index3].lat,lng: this.Pop[index].gate['gate'+index3].lng,gate: this.Pop[index].gate['gate'+index3].description};
+                   }      
+                 }
+ 
+               }
+             }
+           }
+         }
+         console.log(this.stationend) 
+        // this.stationend = {lat:13.757804,lng: 100.565250}
         var goo = google.maps,
             map = new goo.Map(document.getElementById('map'), {
               center: this.end,
@@ -295,18 +351,32 @@ export class MapPage {
                                             map: map,
                                             preserveViewport: true,
                                             suppressMarkers: true,
-                                            polylineOptions: {
-                                              strokeColor: 'blue'
-                                            }
+                                            polylineOptions: {strokeColor: 'blue'},
+                        }),
+                        directionsDisplay3: new google.maps.DirectionsRenderer({
+                                            map: map,
+                                            preserveViewport: true,
+                                            suppressMarkers: true,
+                                            polylineOptions: {strokeColor: 'red'},
                         }),
         },
         startLeg = {
           origin: this.start,
-          destination: this.station,
+          destination: this.stationstart,
           travelMode: 'DRIVING'
         },
+        midLeg = {
+          origin: this.stationstart,
+          destination: this.stationend,
+          travelMode: 'TRANSIT',
+          transitOptions: {
+            modes: ['TRAIN','SUBWAY'],
+            // routingPreference: 'LESS_WALKING',
+            routingPreference: 'FEWER_TRANSFERS',
+          },
+        },
         endLeg = {
-          origin: this.station,
+          origin: this.stationend,
           destination: this.end,
           travelMode: 'TRANSIT',
           transitOptions: {
@@ -324,9 +394,16 @@ export class MapPage {
           }
         });
 
-        App.directionsService.route(endLeg, function(result, status) {
+        App.directionsService.route(midLeg, function(result, status) {
           if (status == google.maps.DirectionsStatus.OK) {
             App.directionsDisplay2.setDirections(result);
+            App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
+          }
+        });
+
+        App.directionsService.route(endLeg, function(result, status) {
+          if (status == google.maps.DirectionsStatus.OK) {
+            App.directionsDisplay3.setDirections(result);
             App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
           }
         });
@@ -349,7 +426,7 @@ export class MapPage {
         // });
 
         // this.directionsService.route({
-        //   origin:  this.station,
+        //   origin:  this.stationstart,
         //   destination: this.end,
         //   // waypoints: waypts,
         //   optimizeWaypoints: true,
@@ -361,6 +438,9 @@ export class MapPage {
         //   window.alert('Directions request failed due to ' + status);
         //   }
         //   });
+
+
+        console.log(this.endgate)
       }
     })
     

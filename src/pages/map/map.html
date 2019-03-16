@@ -20,11 +20,20 @@
 <content-drawer [options]="drawerOptions">
   <div class="content">
     รายละเอียดเส้นทาง
-    <p>
+    <!-- <content-list *ngfor="let gatedata of gatedata">
       aaaa
       {{gatedata}}
       bbbb
-    </p>
+    </content-list> -->
+    <!-- <ion-list *ngfor="let gatedata of gatedata"> -->
+    <ion-list >
+      <ion-item>
+        <ion-label>
+          ทางเข้า : {{gatedata}}
+          ทางออก : {{endgate}}
+        </ion-label>
+      </ion-item>
+      </ion-list>
   </div>
 </content-drawer>
 <!-- <ion-footer>
