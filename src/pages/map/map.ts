@@ -42,6 +42,7 @@ export class MapPage {
   connectgate: any;
   endgate: any;
   gatedata: any;
+  endgatehtml: any;
   // endgate: { lat: any; lng: any; gate: any; };
   // stLatLng: string;
   
@@ -225,12 +226,12 @@ export class MapPage {
                   }
                 }
               }
-              this.navCtrl.push(MapPage, {
-                gatedata: this.startgate.gate,
-                endgate: this.endgate
-              })
+              // this.endgate = this.endgate.gate;
+              // this.navCtrl.push(MapPage, {
+              //   gatedata: this.startgate.gate,
+              //   // endgate: this.endgate
+              // })
               this.gatedata = this.startgate.gate;
-              // this.endgate = this.endgate;
               console.log(this.startgate)
               console.log(this.gatedata)
               console.log(this.endgate)
@@ -323,13 +324,16 @@ export class MapPage {
                    }                 
                    if (countconpare1 == 5) {
                      this.endgate = {lat: this.Pop[index].gate['gate'+index3].lat,lng: this.Pop[index].gate['gate'+index3].lng,gate: this.Pop[index].gate['gate'+index3].description};
-                   }      
+                       this.endgatehtml = this.endgate.gate
+                     console.log(this.endgate.gate)
+                    }      
                  }
  
                }
              }
            }
          }
+
          console.log(this.stationend) 
         // this.stationend = {lat:13.757804,lng: 100.565250}
         var goo = google.maps,
@@ -407,45 +411,10 @@ export class MapPage {
             App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
           }
         });
-
-
-        // // // test direction
         this.directionsDisplay.setMap(this.map);
-        // this.directionsService.route({ 
-        // origin:  this.start ,
-        // destination: this.end,
-        // // waypoints: waypts,
-        // optimizeWaypoints: true,
-        // travelMode: 'TRANSIT'},
-        // (response, status) => {
-        // if (status === 'OK') {
-        // this.directionsDisplay.setDirections(response);
-        // } else {
-        // window.alert('Directions request failed due to ' + status);
-        // }
-        // });
-
-        // this.directionsService.route({
-        //   origin:  this.stationstart,
-        //   destination: this.end,
-        //   // waypoints: waypts,
-        //   optimizeWaypoints: true,
-        //   travelMode: 'TRANSIT',},
-        //   (response, status) => {
-        //   if (status === 'OK') {
-        //   this.directionsDisplay.setDirections(response);
-        //   } else {
-        //   window.alert('Directions request failed due to ' + status);
-        //   }
-        //   });
-
-
         console.log(this.endgate)
       }
     })
-    
-    
-
   }
 
   clearMarkers(){

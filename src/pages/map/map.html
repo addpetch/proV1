@@ -29,8 +29,14 @@
     <ion-list >
       <ion-item>
         <ion-label>
-          ทางเข้า : {{gatedata}}
-          ทางออก : {{endgate}}
+          <p>
+              ทางเข้า : {{gatedata}}
+          </p>
+              <!-- <ng-template *ngIf="endgatehtml"> -->
+              <p>
+                ทางออก : {{endgatehtml}}
+              </p>
+          <!-- </ng-template> -->
         </ion-label>
       </ion-item>
       </ion-list>
