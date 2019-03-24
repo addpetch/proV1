@@ -1,10 +1,12 @@
 import { Component, NgZone, Testability } from '@angular/core';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
-import { LoadingController, Item, Chip } from 'ionic-angular';
+import { LoadingController, Item, Chip, Content } from 'ionic-angular';
 //import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { database } from 'firebase';
 import { NavController } from 'ionic-angular';
+import { ContentDrawer } from '../../components/content-drawer/content-drawer';
+import { map } from 'rxjs-compat/operator/map';
 
 declare var google;
 
@@ -25,28 +27,39 @@ export class MapPage {
   Destination: any ='';
   directionsService = new google.maps.DirectionsService;
   directionsDisplay = new google.maps.DirectionsRenderer;
-  start: any; end: any;
   site = {
     Lat : '13.7501304',
     Lng: '100.5213145'
   };
-  station: any;
-  Pop: any;
-  kartoon: any;
   item: any;
   drawerOptions: any;
+  public Pop: any;
+  public kartoon: any;
+  start: any; end: any;
+  stationstart: any;
+  stationend: any;
+  startgate: any;
+  connectgate: any;
+  endgate: any;
+  startgatehtml: any;
+  endgatehtml: any;
+  routing: any;
+  startstation: any;
+  connectstation:any;
+  endstation: any;
+  // endgate: { lat: any; lng: any; gate: any; };
   // stLatLng: string;
   
-
- 
-
+  
+  
+  
   constructor(
     public navCtrl: NavController,
     public zone: NgZone,
     public geolocation: Geolocation,
     public loadingCtrl: LoadingController,
     public db: AngularFireDatabase, 
-    
+  
     
     ) {
       // test push data
@@ -58,8 +71,10 @@ export class MapPage {
           //    }
           //  ) ;
       // endtest
+
+      
       this.drawerOptions = {
-        handleHeight: 70,
+        handleHeight: 60,
         thresholdFromBottom: 100,
         thresholdFromTop: 100,
         bounceBack: true
@@ -75,17 +90,24 @@ export class MapPage {
           this.autocompleteItems = [];
           this.markers = [];
           this.loading = this.loadingCtrl.create();
+          // this.kartoon = this.startgate;
+          // this.startgate = [];
+        }
+ 
+        ionViewDidLoad(){
+          console.log('aa');
+          // this.getDataFromFirebase().then(data =>{
+              
+          //   this.Pop = data as any;
+          //   this.navCtrl.push(ContentDrawer, {
+          //     Petch :this.Pop
+          //   });
+          // });
+          this.getPosition();
         }
         
-        
-        
-        ionViewDidEnter(){
-          this.getPosition();
-          // this.getDataFromFirebase();
-          
-        } 
-         // Calculate Distance
-         calculateDistance(lat1:number,lat2:number,long1:number,long2:number){
+        // Calculate Distance
+        calculateDistance(lat1:number,lat2:number,long1:number,long2:number){
           let p = 0.017453292519943295;    // Math.PI / 180
           let c = Math.cos;
           let a = 0.5 - c((lat1-lat2) * p) / 2 + c(lat2 * p) *c((lat1) * p) * (1 - c(((long1- long2) * p))) / 2;
@@ -104,17 +126,17 @@ export class MapPage {
             );
           });
         }
-              
-              
-              getPosition():any{
-                this.geolocation.getCurrentPosition().then(response => {
-                  this.loadMap(response);
-                })
-                .catch(error =>{
-                  console.log(error);
-                })
-              }
-
+        
+        
+        getPosition():any{
+          this.geolocation.getCurrentPosition().then(response => {
+            this.loadMap(response);
+          })
+          .catch(error =>{
+            console.log(error);
+          })
+        }
+        
         loadMap(position: Geoposition){
           let latitude = position.coords.latitude;
           let longitude = position.coords.longitude;
@@ -131,12 +153,16 @@ export class MapPage {
             zoom: 12
           });
           google.maps.event.addListenerOnce(this.map, 'idle', () => {
-           
+            
             this.getDataFromFirebase().then(data =>{
               
               this.Pop = data as any;
+              this.navCtrl.push(ContentDrawer, {
+                Petch :this.Pop
+              });
+              console.log(this.Pop);
               
-              // console.log(this.Pop);
+              
                
               let marker1  = new google.maps.Marker({
                     position: myLatLng,
@@ -146,27 +172,58 @@ export class MapPage {
 
               // test compare Locate
               let compare = [];
-
+              let compare1 = [];
                 for (let index = 0; index < 14; index++) {
-                  
-                 compare[index] = this.calculateDistance(this.start.lat,this.Pop[index].lat,this.start.lng,this.Pop[index].lng)
-                  
+                  compare[index] = this.calculateDistance(this.start.lat,this.Pop[index].lat,this.start.lng,this.Pop[index].lng)
+                  // for (let index1 = 1; index1 < 7; index1++) {
+                  //   compare1[index] = this.calculateDistance(this.start.lat,this.Pop[index].gate['gate'+index1].lat,this.start.lng,this.Pop[index].gate['gate'+index1].lng)
+                  //   console.log(compare1[index]);                    
+                  // }
                 }
-                // console.log(compare);
+                console.log(this.start);
+                console.log(compare);
+                
               // mark End location
-              let countconpare = 0;
+              
               for (let index = 0; index < 14; index++) {
                 let compo = compare[index];
-                countconpare = 0;
+                let countconpare = 0;
                 for (let index1 = 0; index1 < 14; index1++) {
-                   if (compo<compare[index1]) {
+                  if (compo<compare[index1]) {
                     countconpare++;
                   }
                   if (countconpare == 13){
-                    this.station = {lat: this.Pop[index].lat,lng: this.Pop[index].lng};
+                    this.stationstart = {lat: this.Pop[index].lat,lng: this.Pop[index].lng,name: this.Pop[index].name,line: this.Pop[index].line};
+                    this.startstation = this.stationstart.name
+                    // ,gate: this.Pop[index].gate
+                    // this.stationstart = {lat: this.Pop[13].lat,lng: this.Pop[13].lng,name: this.Pop[13].name,line: this.Pop[13].line};
+                    for (let index2 = 1; index2 < 7; index2++) {
+                      compare1[index2] = this.calculateDistance(this.start.lat,this.Pop[index].gate['gate'+index2].lat,this.start.lng,this.Pop[index].gate['gate'+index2].lng)
+                    }
+                    // console.log(compare1);
+                    for (let index3 = 1; index3 < 7; index3++) {
+                      let compogate = compare1[index3];
+                      let countconpare1 = 0;
+                      // console.log(compogate+'compo');
+                      // console.log(countconpare1+'countstart');
+                      for (let index4 = 1; index4 < 7; index4++) {
+                        // console.log(index4+'i');
+                        if (compogate<compare1[index4]) {
+                          countconpare1++;
+                          // console.log(countconpare1+'count');
+                        }                 
+                        if (countconpare1 == 5) {
+                          this.startgate = {lat: this.Pop[index].gate['gate'+index3].lat,lng: this.Pop[index].gate['gate'+index3].lng,gate: this.Pop[index].gate['gate'+index3].description};
+                        }      
+                      }
+
+                    }
                   }
                 }
               }
+              this.startgatehtml = this.startgate.gate;
+
+              
           mapEle.classList.add('show-map');
         });
       })
@@ -194,13 +251,12 @@ export class MapPage {
   selectSearchResult(item):any{
     this.clearMarkers();
     this.autocompleteItems = [];
-    console.log(this.station);
-    console.log(this.Pop);
-    let waypts = [{location: this.station,
+    // console.log(this.Pop);
+    let waypts = [{location: this.stationstart,
                   stopover: true}];
     
     
-
+    
 
     this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
       
@@ -209,16 +265,100 @@ export class MapPage {
           position: {lat: results[0].geometry.viewport.ma.j,lng: results[0].geometry.viewport.ga.j},
           map: this.map
         });
-        console.log(results[0].geometry.location);
+        // console.log(results[0].geometry.location);
         // console.log(results[0].geometry.bounds.ga.j);
         // console.log(results[0].geometry.bounds.ma.j);        
-
+        
         // this.clearMarkers();
         this.markers.push(marker);
         this.map.setCenter(results[0].geometry.location);
         this.end = {lat: results[0].geometry.viewport.ma.j,lng: results[0].geometry.viewport.ga.j};
-        console.log(this.end);
 
+         // setstationend
+         let compare = [];
+         let compare1 = [];
+         for (let index = 0; index < 14; index++) {
+           compare[index] = this.calculateDistance(this.end.lat,this.Pop[index].lat,this.end.lng,this.Pop[index].lng)
+           // for (let index1 = 1; index1 < 7; index1++) {
+           //   compare1[index] = this.calculateDistance(this.start.lat,this.Pop[index].gate['gate'+index1].lat,this.start.lng,this.Pop[index].gate['gate'+index1].lng)
+           //   console.log(compare1[index]);                    
+           // }
+         }
+         
+         for (let index = 0; index < 14; index++) {
+           let compo = compare[index];
+           let countconpare = 0;
+           for (let index1 = 0; index1 < 14; index1++) {
+             if (compo<compare[index1]) {
+               countconpare++;
+             }
+             if (countconpare == 13){
+               this.stationend = {lat: this.Pop[index].lat,lng: this.Pop[index].lng,line: this.Pop[index].line,name: this.Pop[index].name};
+               this.endstation = this.stationend.name
+               for (let index2 = 1; index2 < 7; index2++) {
+                 compare1[index2] = this.calculateDistance(this.end.lat,this.Pop[index].gate['gate'+index2].lat,this.end.lng,this.Pop[index].gate['gate'+index2].lng)
+               }
+               // console.log(compare1);
+               for (let index3 = 1; index3 < 7; index3++) {
+                 let compogate = compare1[index3];
+                 let countconpare1 = 0;
+                //  console.log(compogate+'compo');
+                //  console.log(countconpare1+'countstart');
+                 for (let index4 = 1; index4 < 7; index4++) {
+                  //  console.log(index4+'i');
+                   if (compogate<compare1[index4]) {
+                     countconpare1++;
+                    //  console.log(countconpare1+'count');
+                   }                 
+                   if (countconpare1 == 5) {
+                     this.endgate = {lat: this.Pop[index].gate['gate'+index3].lat,lng: this.Pop[index].gate['gate'+index3].lng,gate: this.Pop[index].gate['gate'+index3].description};
+                       this.endgatehtml = this.endgate.gate
+                     console.log(this.endgate.gate)
+                    }      
+                 }
+ 
+               }
+             }
+           }
+         }
+         console.log(this.stationstart)
+         console.log(this.stationend)
+         if (this.stationstart.line == 'green' && this.stationend.line == 'blue') {
+          this.connectstation = this.Pop[7].name
+          this.connectgate = 'ประตู6'
+           this.routing = 'LESS_WALKING'
+         } else {
+            if (this.stationstart.line == 'blue' && this.stationend.line == 'green') {
+          this.connectstation = this.Pop[8].name
+          this.connectgate = 'ประตู3'
+           this.routing = 'FEWER_TRANSFERS'
+         }
+         else if (this.stationstart.line == 'green' && this.stationend.line == 'skyblue'){
+          this.connectstation = this.Pop[1].name
+          this.connectgate = 'ประตู1'
+          this.routing = 'LESS_WALKING'
+
+         }
+         else if (this.stationstart.line == 'skybule' && this.stationend.line == 'green'){
+          this.connectstation = this.Pop[11].name          
+          this.connectgate = 'ประตู1'
+          this.routing = 'LESS_WALKING'
+        }
+        else if (this.stationstart.line == 'blue' && this.stationend.line == 'skyblue'){
+          this.connectstation = this.Pop[9].name
+          this.connectgate = 'ประตู1'
+          this.routing = 'LESS_WALKING'
+        }
+        else if (this.stationstart.line == 'skyblue' && this.stationend.line == 'blue'){
+          this.connectstation = this.Pop[13].name
+          this.connectgate = 'ประตู1'
+          this.routing = 'LESS_WALKING'
+        }
+        else
+        {
+          this.connectgate = ''
+        }
+      }
         var goo = google.maps,
             map = new goo.Map(document.getElementById('map'), {
               center: this.end,
@@ -238,18 +378,32 @@ export class MapPage {
                                             map: map,
                                             preserveViewport: true,
                                             suppressMarkers: true,
-                                            polylineOptions: {
-                                              strokeColor: 'blue'
-                                            }
+                                            polylineOptions: {strokeColor: 'blue'},
+                        }),
+                        directionsDisplay3: new google.maps.DirectionsRenderer({
+                                            map: map,
+                                            preserveViewport: true,
+                                            suppressMarkers: true,
+                                            polylineOptions: {strokeColor: 'red'},
                         }),
         },
         startLeg = {
           origin: this.start,
-          destination: this.station,
+          destination: this.stationstart,
           travelMode: 'DRIVING'
         },
+        midLeg = {
+          origin: this.stationstart,
+          destination: this.stationend,
+          travelMode: 'TRANSIT',
+          transitOptions: {
+            modes: ['TRAIN','SUBWAY'],
+            // routingPreference: 'LESS_WALKING',
+            routingPreference: this.routing,
+          },
+        },
         endLeg = {
-          origin: this.station,
+          origin: this.stationend,
           destination: this.end,
           travelMode: 'TRANSIT',
           transitOptions: {
@@ -259,7 +413,6 @@ export class MapPage {
           },
           
         };
-
         App.directionsService.route(startLeg, function(result, status){
           if (status === 'OK') {
             App.directionsDisplay1.setDirections(result);
@@ -267,53 +420,27 @@ export class MapPage {
           }
         });
 
-        App.directionsService.route(endLeg, function(result, status) {
+        App.directionsService.route(midLeg, function(result, status) {
           if (status == google.maps.DirectionsStatus.OK) {
             App.directionsDisplay2.setDirections(result);
             App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
           }
         });
 
-
-        // // // test direction
+        App.directionsService.route(endLeg, function(result, status) {
+          if (status == google.maps.DirectionsStatus.OK) {
+            App.directionsDisplay3.setDirections(result);
+            App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
+          }
+        });
         this.directionsDisplay.setMap(this.map);
-        // this.directionsService.route({ 
-        // origin:  this.start ,
-        // destination: this.end,
-        // // waypoints: waypts,
-        // optimizeWaypoints: true,
-        // travelMode: 'TRANSIT'},
-        // (response, status) => {
-        // if (status === 'OK') {
-        // this.directionsDisplay.setDirections(response);
-        // } else {
-        // window.alert('Directions request failed due to ' + status);
-        // }
-        // });
-
-        // this.directionsService.route({
-        //   origin:  this.station,
-        //   destination: this.end,
-        //   // waypoints: waypts,
-        //   optimizeWaypoints: true,
-        //   travelMode: 'TRANSIT',},
-        //   (response, status) => {
-        //   if (status === 'OK') {
-        //   this.directionsDisplay.setDirections(response);
-        //   } else {
-        //   window.alert('Directions request failed due to ' + status);
-        //   }
-        //   });
       }
     })
-    
-    
-
   }
 
   clearMarkers(){
     for (var i = 0; i < this.markers.length; i++) {
-      console.log(this.markers[i])
+      // console.log(this.markers[i])
       this.markers[i].setMap(null);
     }
     this.markers = [];

@@ -45,9 +45,10 @@ import { ContentDrawer } from '../components/content-drawer/content-drawer';
     MyApp,
     MapPage,
     TabsNavigationPage,
-    PlacesPage
+    PlacesPage,
+    ContentDrawer
   ],
-  
+  exports: [ContentDrawer],
   providers: [
     StatusBar,
     Connectivity,

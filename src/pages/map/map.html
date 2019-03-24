@@ -19,10 +19,30 @@
 
 <content-drawer [options]="drawerOptions">
   <div class="content">
-    The world is your oyster.
-    <p>
-      If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-    </p>
+    รายละเอียดเส้นทาง
+    <!-- <content-list *ngfor="let gatedata of gatedata">
+      aaaa
+      {{gatedata}}
+      bbbb
+    </content-list> -->
+    <!-- <ion-list *ngfor="let gatedata of gatedata"> -->
+    <ion-list >
+      <ion-item>
+        <ion-label>
+          <p>
+              ทางเข้า : {{startstation}} -> {{startgatehtml}}
+          </p>
+              <!-- <ng-template *ngIf="endgatehtml"> -->
+          <p *ngIf = 'connectgate'>
+            ทางเชื่อม : {{connectstation}} -> {{connectgate}}
+          </p>
+          <p>
+            ทางออก : {{endstation}} -> {{endgatehtml}}
+          </p>
+          <!-- </ng-template> -->
+        </ion-label>
+      </ion-item>
+      </ion-list>
   </div>
 </content-drawer>
 <!-- <ion-footer>
