@@ -324,11 +324,13 @@ export class MapPage {
          console.log(this.stationstart)
          console.log(this.stationend)
          if (this.stationstart.line == 'green' && this.stationend.line == 'blue') {
-           this.connectgate = 'ประตู6'
+          this.connectstation = this.Pop[7].name
+          this.connectgate = 'ประตู6'
            this.routing = 'LESS_WALKING'
          } else {
             if (this.stationstart.line == 'blue' && this.stationend.line == 'green') {
-           this.connectgate = 'ประตู3'
+          this.connectstation = this.Pop[8].name
+          this.connectgate = 'ประตู3'
            this.routing = 'FEWER_TRANSFERS'
          }
          else if (this.stationstart.line == 'green' && this.stationend.line == 'skyblue'){
@@ -338,14 +340,17 @@ export class MapPage {
 
          }
          else if (this.stationstart.line == 'skybule' && this.stationend.line == 'green'){
+          this.connectstation = this.Pop[11].name          
           this.connectgate = 'ประตู1'
           this.routing = 'LESS_WALKING'
         }
         else if (this.stationstart.line == 'blue' && this.stationend.line == 'skyblue'){
+          this.connectstation = this.Pop[9].name
           this.connectgate = 'ประตู1'
           this.routing = 'LESS_WALKING'
         }
         else if (this.stationstart.line == 'skyblue' && this.stationend.line == 'blue'){
+          this.connectstation = this.Pop[13].name
           this.connectgate = 'ประตู1'
           this.routing = 'LESS_WALKING'
         }
