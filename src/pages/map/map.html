@@ -30,12 +30,15 @@
       <ion-item>
         <ion-label>
           <p>
-              ทางเข้า : {{gatedata}}
+              ทางเข้า : {{startstation}} -> {{startgatehtml}}
           </p>
               <!-- <ng-template *ngIf="endgatehtml"> -->
-              <p>
-                ทางออก : {{endgatehtml}}
-              </p>
+          <p *ngIf = 'connectgate'>
+            ทางเชื่อม : {{connectstation}} -> {{connectgate}}
+          </p>
+          <p>
+            ทางออก : {{endstation}} -> {{endgatehtml}}
+          </p>
           <!-- </ng-template> -->
         </ion-label>
       </ion-item>
