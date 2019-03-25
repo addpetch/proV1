@@ -16,6 +16,9 @@ declare var google;
 })
 export class MapPage {
   
+
+  tabBarElement: any;
+  splash = true;
   map: any;
   markers: any;
   autocomplete: any;
@@ -79,7 +82,7 @@ export class MapPage {
           //  ) ;
       // endtest
 
-      
+      this.tabBarElement = document.querySelector('.tabbar');
       this.drawerOptions = {
         handleHeight: 70,
         thresholdFromBottom: 100,
@@ -102,6 +105,22 @@ export class MapPage {
         }
  
         ionViewDidLoad(){
+<<<<<<< HEAD
+=======
+          this.tabBarElement.style.display = 'none';
+      setTimeout(() => {
+      this.splash = false;
+      this.tabBarElement.style.display = 'flex';
+    }, 4000);
+          console.log('aa');
+          // this.getDataFromFirebase().then(data =>{
+              
+          //   this.Pop = data as any;
+          //   this.navCtrl.push(ContentDrawer, {
+          //     Petch :this.Pop
+          //   });
+          // });
+>>>>>>> b8fedccfbbf840589a926a516a89308f6b7f3451
           this.getPosition();
         }
         
