@@ -106,7 +106,10 @@ export class MapPage {
  
         ionViewDidLoad(){
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> b8fedccfbbf840589a926a516a89308f6b7f3451
           this.tabBarElement.style.display = 'none';
       setTimeout(() => {
       this.splash = false;
