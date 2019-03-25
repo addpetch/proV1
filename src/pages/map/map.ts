@@ -16,6 +16,9 @@ declare var google;
 })
 export class MapPage {
   
+
+  tabBarElement: any;
+  splash = true;
   map: any;
   markers: any;
   autocomplete: any;
@@ -72,7 +75,7 @@ export class MapPage {
           //  ) ;
       // endtest
 
-      
+      this.tabBarElement = document.querySelector('.tabbar');
       this.drawerOptions = {
         handleHeight: 60,
         thresholdFromBottom: 100,
@@ -95,6 +98,11 @@ export class MapPage {
         }
  
         ionViewDidLoad(){
+          this.tabBarElement.style.display = 'none';
+      setTimeout(() => {
+      this.splash = false;
+      this.tabBarElement.style.display = 'flex';
+    }, 4000);
           console.log('aa');
           // this.getDataFromFirebase().then(data =>{
               
