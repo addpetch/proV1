@@ -46,7 +46,14 @@ export class MapPage {
   routing: any;
   startstation: any;
   connectstation:any;
+  connectstationhtml: any;
   endstation: any;
+  nextstation: any;
+  previousstation : any;
+  nextstationhtml:any;
+  n: any;
+  p: any;
+  
   // endgate: { lat: any; lng: any; gate: any; };
   // stLatLng: string;
   
@@ -74,7 +81,7 @@ export class MapPage {
 
       
       this.drawerOptions = {
-        handleHeight: 60,
+        handleHeight: 70,
         thresholdFromBottom: 100,
         thresholdFromTop: 100,
         bounceBack: true
@@ -95,14 +102,6 @@ export class MapPage {
         }
  
         ionViewDidLoad(){
-          console.log('aa');
-          // this.getDataFromFirebase().then(data =>{
-              
-          //   this.Pop = data as any;
-          //   this.navCtrl.push(ContentDrawer, {
-          //     Petch :this.Pop
-          //   });
-          // });
           this.getPosition();
         }
         
@@ -157,13 +156,7 @@ export class MapPage {
             this.getDataFromFirebase().then(data =>{
               
               this.Pop = data as any;
-              this.navCtrl.push(ContentDrawer, {
-                Petch :this.Pop
-              });
-              console.log(this.Pop);
-              
-              
-               
+
               let marker1  = new google.maps.Marker({
                     position: myLatLng,
                       map: this.map,
@@ -194,7 +187,9 @@ export class MapPage {
                   }
                   if (countconpare == 13){
                     this.stationstart = {lat: this.Pop[index].lat,lng: this.Pop[index].lng,name: this.Pop[index].name,line: this.Pop[index].line};
+                    // this.stationstart = {lat: this.Pop[8].lat,lng: this.Pop[8].lng,name: this.Pop[8].name,line: this.Pop[8].line};
                     this.startstation = this.stationstart.name
+                    this.n = index
                     // ,gate: this.Pop[index].gate
                     // this.stationstart = {lat: this.Pop[13].lat,lng: this.Pop[13].lng,name: this.Pop[13].name,line: this.Pop[13].line};
                     for (let index2 = 1; index2 < 7; index2++) {
@@ -293,6 +288,7 @@ export class MapPage {
                countconpare++;
              }
              if (countconpare == 13){
+               this.p = index
                this.stationend = {lat: this.Pop[index].lat,lng: this.Pop[index].lng,line: this.Pop[index].line,name: this.Pop[index].name};
                this.endstation = this.stationend.name
                for (let index2 = 1; index2 < 7; index2++) {
@@ -321,36 +317,71 @@ export class MapPage {
              }
            }
          }
+         console.log(this.Pop[this.p])
          console.log(this.stationstart)
          console.log(this.stationend)
          if (this.stationstart.line == 'green' && this.stationend.line == 'blue') {
-          this.connectstation = this.Pop[7].name
+          this.connectstation = this.Pop[7]
+          this.connectstationhtml = this.connectstation.name
           this.connectgate = 'ประตู6'
            this.routing = 'LESS_WALKING'
+           this.nextstation = this.Pop[this.n+1].name
+           if (this.stationend.name == this.Pop[10].name) {
+             this.previousstation = this.Pop[this.p-3].name
+           } else{
+             this.previousstation = this.Pop[this.p-1].name
+           }
          } else {
             if (this.stationstart.line == 'blue' && this.stationend.line == 'green') {
-          this.connectstation = this.Pop[8].name
+          this.connectstation = this.Pop[8]
+          this.connectstationhtml = this.connectstation.name
           this.connectgate = 'ประตู3'
            this.routing = 'FEWER_TRANSFERS'
+           if (this.stationstart.name == this.Pop[10].name) {
+             this.nextstation = this.Pop[this.n-3].name
+           } else {
+            this.nextstation = this.Pop[this.n+1].name             
+           }
+           if (this.stationend.name == this.Pop[7].name) {
+            this.previousstation = this.Pop[this.p+3].name
+          } else{
+            this.previousstation = this.Pop[this.p+1].name
+          }
          }
          else if (this.stationstart.line == 'green' && this.stationend.line == 'skyblue'){
-          this.connectstation = this.Pop[1].name
+          this.connectstation = this.Pop[1]
+          this.connectstationhtml = this.connectstation.name
           this.connectgate = 'ประตู1'
           this.routing = 'LESS_WALKING'
-
+          if (this.n>1) {
+            this.nextstation = this.Pop[this.n-1].name
+          } else if (this.n>0){
+            this.nextstation = this.Pop[this.n+10].name
+          } else {
+            this.nextstation = this.Pop[this.n+1].name            
+          }
+          if (this.stationend.name == this.Pop[11].name) {
+            this.previousstation = ''
+            this.nextstation = ''
+          } else{
+            this.previousstation = this.Pop[this.p-1].name
+          }
          }
          else if (this.stationstart.line == 'skybule' && this.stationend.line == 'green'){
-          this.connectstation = this.Pop[11].name          
+          this.connectstation = this.Pop[11]
+          this.connectstationhtml = this.connectstation.name          
           this.connectgate = 'ประตู1'
           this.routing = 'LESS_WALKING'
         }
         else if (this.stationstart.line == 'blue' && this.stationend.line == 'skyblue'){
-          this.connectstation = this.Pop[9].name
+          this.connectstation = this.Pop[9]
+          this.connectstationhtml = this.connectstation.name
           this.connectgate = 'ประตู1'
           this.routing = 'LESS_WALKING'
         }
         else if (this.stationstart.line == 'skyblue' && this.stationend.line == 'blue'){
-          this.connectstation = this.Pop[13].name
+          this.connectstation = this.Pop[13]
+          this.connectstationhtml = this.connectstation.name
           this.connectgate = 'ประตู1'
           this.routing = 'LESS_WALKING'
         }
@@ -358,7 +389,21 @@ export class MapPage {
         {
           this.connectgate = ''
         }
+        if (this.stationstart.line == this.stationend.line ) {
+          if (this.n>this.p) {
+            console.log(this.p)
+            console.log(this.n)
+            this.nextstation = this.Pop[this.n-1].name
+            this.previousstation =this.Pop[this.p+1].name
+          } else {
+            console.log(this.p)
+            console.log(this.n)
+            this.nextstation = this.Pop[this.n+1].name
+            this.previousstation =this.Pop[this.p-1].name
+          }
+        } 
       }
+      console.log(this.connectstation)
         var goo = google.maps,
             map = new goo.Map(document.getElementById('map'), {
               center: this.end,
@@ -384,13 +429,39 @@ export class MapPage {
                                             map: map,
                                             preserveViewport: true,
                                             suppressMarkers: true,
-                                            polylineOptions: {strokeColor: 'red'},
+                                            polylineOptions: {strokeColor: 'green'},
                         }),
+                        directionsDisplay4: new google.maps.DirectionsRenderer({
+                          map: map,
+                          preserveViewport: true,
+                          suppressMarkers: true,
+                          polylineOptions: {strokeColor: 'red'},
+      }),
         },
         startLeg = {
           origin: this.start,
           destination: this.stationstart,
           travelMode: 'DRIVING'
+        },
+        connLeg = {
+          origin: this.stationstart,
+          destination: {lat : this.connectstation.lat, lng: this.connectstation.lng},
+          travelMode: 'TRANSIT',
+          transitOptions: {
+            modes: ['TRAIN','SUBWAY'],
+            routingPreference: 'LESS_WALKING',
+            // routingPreference: 'FEWER_TRANSFERS',
+          },
+        },
+        connLeg2 = {
+          origin: {lat : this.connectstation.lat, lng: this.connectstation.lng},
+          destination: this.stationend,
+          travelMode: 'TRANSIT',
+          transitOptions: {
+            modes: ['TRAIN','SUBWAY'],
+            routingPreference: 'LESS_WALKING',
+            // routingPreference: 'FEWER_TRANSFERS',
+          },
         },
         midLeg = {
           origin: this.stationstart,
@@ -408,34 +479,61 @@ export class MapPage {
           travelMode: 'TRANSIT',
           transitOptions: {
             modes: ['TRAIN','SUBWAY'],
-            // routingPreference: 'LESS_WALKING',
-            routingPreference: 'FEWER_TRANSFERS',
+            routingPreference: 'LESS_WALKING',
+            // routingPreference: 'FEWER_TRANSFERS',
           },
           
         };
+
         App.directionsService.route(startLeg, function(result, status){
           if (status === 'OK') {
             App.directionsDisplay1.setDirections(result);
             App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
           }
         });
+        if (this.connectstation != '') {
+          App.directionsService.route(connLeg, function(result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              App.directionsDisplay2.setDirections(result);
+              App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
+            }
+          });
+          App.directionsService.route(connLeg2, function(result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              App.directionsDisplay3.setDirections(result);
+              App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
+            }
+          });
+          App.directionsService.route(endLeg, function(result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              App.directionsDisplay4.setDirections(result);
+              App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
+            }
+          });
+        } else {
+          App.directionsService.route(midLeg, function(result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              App.directionsDisplay2.setDirections(result);
+              App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
+            }
+          });
+          App.directionsService.route(endLeg, function(result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              App.directionsDisplay3.setDirections(result);
+              App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
+            }
+          });
+        }
+        
 
-        App.directionsService.route(midLeg, function(result, status) {
-          if (status == google.maps.DirectionsStatus.OK) {
-            App.directionsDisplay2.setDirections(result);
-            App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
-          }
-        });
-
-        App.directionsService.route(endLeg, function(result, status) {
-          if (status == google.maps.DirectionsStatus.OK) {
-            App.directionsDisplay3.setDirections(result);
-            App.map.fitBounds(App.bounds.union(result.routes[0].bounds));
-          }
-        });
+        
         this.directionsDisplay.setMap(this.map);
       }
     })
+    console.log(this.n)
+    console.log(this.p)
+    this.p = ''
+    this.connectstation = ''
   }
 
   clearMarkers(){

@@ -33,10 +33,22 @@
               ทางเข้า : {{startstation}} -> {{startgatehtml}}
           </p>
               <!-- <ng-template *ngIf="endgatehtml"> -->
-          <p *ngIf = 'connectgate'>
-            ทางเชื่อม : {{connectstation}} -> {{connectgate}}
+          <p *ngIf = 'nextstation'>
+              {{nextstation}}
           </p>
-          <p>
+          <p *ngIf = 'nextstation'>
+          .
+          </p>             
+          <p *ngIf = 'connectgate'>
+            ทางเชื่อม : {{connectstationhtml}} -> {{connectgate}}
+          </p>
+          <p *ngIf = 'nextstation'>
+          .
+          </p>        
+          <p *ngIf = 'previousstation'>
+          {{previousstation}}
+          </p>
+          <p *ngIf = 'endgatehtml'>          
             ทางออก : {{endstation}} -> {{endgatehtml}}
           </p>
           <!-- </ng-template> -->
