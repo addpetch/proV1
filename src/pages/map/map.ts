@@ -8,6 +8,9 @@ import { NavController } from 'ionic-angular';
 import { ContentDrawer } from '../../components/content-drawer/content-drawer';
 import { map } from 'rxjs-compat/operator/map';
 import { google } from "google-maps";
+import { Storage } from '@ionic/storage';
+import { IntroPage } from '../intro/intro';
+
 
 
 
@@ -74,6 +77,7 @@ export class MapPage {
     public geolocation: Geolocation,
     public loadingCtrl: LoadingController,
     public db: AngularFireDatabase, 
+    public storage: Storage
   
     
     ) {
@@ -110,6 +114,12 @@ export class MapPage {
         }
  
         ionViewDidLoad(){
+          this.storage.get('intro-done').then(done => {
+            if (!done) {
+              this.storage.set('intro-done', true);
+              this.navCtrl.setRoot(IntroPage);
+            }
+          });
           this.tabBarElement.style.display = 'none';
             setTimeout(() => {
               this.splash = false;
