@@ -7,8 +7,13 @@ import { database } from 'firebase';
 import { NavController } from 'ionic-angular';
 import { ContentDrawer } from '../../components/content-drawer/content-drawer';
 import { map } from 'rxjs-compat/operator/map';
+import { google } from "google-maps";
+
+
 
 declare var google;
+
+
 
 @Component({
   selector: 'page-map',
@@ -106,11 +111,10 @@ export class MapPage {
  
         ionViewDidLoad(){
           this.tabBarElement.style.display = 'none';
-      setTimeout(() => {
-      this.splash = false;
-      this.tabBarElement.style.display = 'flex';
-    }, 4000);
-          console.log('aa');
+            setTimeout(() => {
+              this.splash = false;
+              this.tabBarElement.style.display = 'flex';
+            }, 4000);
           // this.getDataFromFirebase().then(data =>{
               
           //   this.Pop = data as any;
@@ -189,8 +193,8 @@ export class MapPage {
                   //   console.log(compare1[index]);                    
                   // }
                 }
-                console.log(this.start);
-                console.log(compare);
+                // console.log(this.start);
+                // console.log(compare);
                 
               // mark End location
               
