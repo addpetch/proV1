@@ -113,18 +113,23 @@ export class MapPage {
           // this.startgate = [];
         }
  
-        ionViewDidLoad(){
-          this.storage.get('intro-done').then(done => {
-            if (!done) {
-              this.storage.set('intro-done', true);
-              this.navCtrl.setRoot(IntroPage);
-            }
-          });
+        ionViewWillEnter(){
+          console.log('l')
           this.tabBarElement.style.display = 'none';
             setTimeout(() => {
               this.splash = false;
               this.tabBarElement.style.display = 'flex';
             }, 4000);
+          
+        }
+        ionViewDidLoad(){
+          console.log('ll')
+          this.storage.get('intro-done').then(done => {
+            if (done) {
+              this.storage.set('intro-done', false);
+              this.navCtrl.setRoot(IntroPage);
+            }
+          });
           // this.getDataFromFirebase().then(data =>{
               
           //   this.Pop = data as any;
@@ -133,6 +138,10 @@ export class MapPage {
           //   });
           // });
           this.getPosition();
+        }
+        ionViewDidEnter(){
+          console.log('lll')
+          this.storage.set('intro-done', true);
         }
         
         // Calculate Distance
