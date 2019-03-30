@@ -7,6 +7,9 @@ import { database } from 'firebase';
 import { NavController } from 'ionic-angular';
 import { ContentDrawer } from '../../components/content-drawer/content-drawer';
 import { map } from 'rxjs-compat/operator/map';
+import { Storage } from '@ionic/storage';
+import { IntroPage } from '../intro/intro';
+
 
 declare var google;
 
@@ -69,6 +72,7 @@ export class MapPage {
     public geolocation: Geolocation,
     public loadingCtrl: LoadingController,
     public db: AngularFireDatabase, 
+    public storage: Storage
   
     
     ) {
@@ -103,22 +107,36 @@ export class MapPage {
           // this.kartoon = this.startgate;
           // this.startgate = [];
         }
- 
-        ionViewDidLoad(){
-          this.tabBarElement.style.display = 'none';
-      setTimeout(() => {
-      this.splash = false;
-      this.tabBarElement.style.display = 'flex';
-    }, 4000);
-          console.log('aa');
-          // this.getDataFromFirebase().then(data =>{
-              
-          //   this.Pop = data as any;
-          //   this.navCtrl.push(ContentDrawer, {
-          //     Petch :this.Pop
-          //   });
-          // });
-          this.getPosition();
+        
+        ngAfterViewInit(){
+          this.storage.get('page-intro').then(done => {
+            if (!done) {
+              this.storage.set('intro-done', true);
+              this.navCtrl.setRoot(IntroPage);
+            }
+            else if (done){
+              this.storage.set('intro-done', false);
+              this.navCtrl.setRoot(IntroPage);
+            }
+            
+            this.tabBarElement.style.display = 'none';
+            setTimeout(() => {
+            this.splash = false;
+            this.tabBarElement.style.display = 'flex';
+          }, 4000);
+                console.log('aa');
+                // this.getDataFromFirebase().then(data =>{
+                    
+                //   this.Pop = data as any;
+                //   this.navCtrl.push(ContentDrawer, {
+                //     Petch :this.Pop
+                //   });
+                // });
+                this.getPosition();
+                
+            
+          });
+         
         }
         
         // Calculate Distance
