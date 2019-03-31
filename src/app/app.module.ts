@@ -63,7 +63,7 @@ import { IntroPage } from '../pages/intro/intro';
     SplashScreen,
     Geolocation,
     Network,
-    {provide: ErrorHandler, useClass: IonicErrorHandler }
+    
     // FirebaseService,
   ]
 })

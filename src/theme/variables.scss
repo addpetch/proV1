@@ -27,7 +27,8 @@ $colors: (
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #222,
+  txt: #43569a
 );
 
 
@@ -69,3 +70,7 @@ $colors: (
 
 $ionicons-font-path: "../assets/fonts";
 @import "ionicons";
+@import url('https://fonts.googleapis.com/css?family=Mitr');
+*{
+  font-family: 'Mitr', sans-serif;
+}

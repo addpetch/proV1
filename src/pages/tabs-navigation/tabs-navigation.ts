@@ -13,6 +13,6 @@ export class TabsNavigationPage {
 
   constructor() {
     this.tab1Root = MapPage;
-    // this.tab2Root = PlacesPage;
+    this.tab2Root = PlacesPage;
   }
 }

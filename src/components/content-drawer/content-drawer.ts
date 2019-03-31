@@ -79,7 +79,7 @@ export class ContentDrawer {
     if((newTop < this.thresholdTop && ev.additionalEvent === "panup") || bounceToTop){
 
       this.domCtrl.write(() => {
-        this.renderer.setElementStyle(this.element.nativeElement, 'top', this.platform.height() - this.handleHeight - 250 + 'px');
+        this.renderer.setElementStyle(this.element.nativeElement, 'top', this.platform.height() - this.handleHeight - 300 + 'px');
         this.renderer.setElementStyle(this.element.nativeElement, 'padding-top', this.handleHeight + 'px');
         
       });
