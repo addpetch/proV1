@@ -96,7 +96,7 @@ export class MapPage {
 
       this.tabBarElement = document.querySelector('.tabbar');
       this.drawerOptions = {
-        handleHeight: 70,
+        handleHeight: 77,
         thresholdFromBottom: 100,
         thresholdFromTop: 100,
         bounceBack: true
