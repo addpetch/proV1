@@ -1,6 +1,6 @@
 import { Component, NgZone, Testability } from '@angular/core';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
-import { LoadingController, Item, Chip, Content } from 'ionic-angular';
+import { LoadingController, Item, Chip, Content, NavParams } from 'ionic-angular';
 //import { FirebaseServiceProvider } from '../../providers/firebase-service/firebase-service';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { database } from 'firebase';
@@ -64,6 +64,7 @@ export class MapPage {
   nextstationhtml:any;
   n: any;
   p: any;
+  Petch :any;
   
   // endgate: { lat: any; lng: any; gate: any; };
   // stLatLng: string;
@@ -77,7 +78,9 @@ export class MapPage {
     public geolocation: Geolocation,
     public loadingCtrl: LoadingController,
     public db: AngularFireDatabase, 
-    public storage: Storage
+    public storage: Storage,
+    public navParams: NavParams,
+
   
     
     ) {
@@ -114,22 +117,34 @@ export class MapPage {
         }
  
         ionViewWillEnter(){
-          console.log('l')
+          this.Petch = this.navParams.get("Petch");
+          console.log(this.Petch)
           this.tabBarElement.style.display = 'none';
             setTimeout(() => {
-              this.splash = false;
               this.tabBarElement.style.display = 'flex';
-            }, 4000);
+            }, 0);
+            setTimeout(() => {
+            this.splash = false;
+          }, 2500);
+
           
         }
         ionViewDidLoad(){
           console.log('ll')
-          this.storage.get('intro-done').then(done => {
-            if (done) {
-              this.storage.set('intro-done', false);
-              this.navCtrl.setRoot(IntroPage);
-            }
-          });
+          if (this.Petch == 2) {
+            console.log('lml')
+          } else{
+            this.storage.get('intro-done').then(done => {
+              if (done) {
+                this.storage.set('intro-done', false);
+                this.navCtrl.setRoot(IntroPage,{
+                  Petch : 1
+                });
+                
+              }
+            });
+
+          }
           // this.getDataFromFirebase().then(data =>{
               
           //   this.Pop = data as any;

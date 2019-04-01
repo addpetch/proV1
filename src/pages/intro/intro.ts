@@ -20,10 +20,16 @@ export class IntroPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
+  Petch: any;
+
   navHome() {
-
     this.navCtrl.setRoot(MapPage);
-
   }
-
+  disableintro(){
+    this.Petch = this.navParams.get("Petch");
+    this.navCtrl.push(MapPage, {
+      Petch : 2
+    });
+    
+  }
 }
