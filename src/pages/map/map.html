@@ -1,7 +1,7 @@
 <div id="custom-overlay" [style.display]="splash ? 'flex': 'none'">
   <div class="flb">
     <div class="Aligner-item Aligner-item--top"></div>
-    <img src="assets/imgs/4-2.png">
+    <img src="/assets/imgs/4-2.png">
     <div class="Aligner-item Aligner-item--bottom"></div>
   </div>
 </div>
@@ -9,7 +9,8 @@
 
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="ไปไหนดี?"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="ไปไหนดี ?">
+    </ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -23,7 +24,7 @@
   </ion-list>
 
   <div id='map'></div>
- 
+
 </ion-content>
 
 <content-drawer [options]="drawerOptions">
@@ -35,35 +36,29 @@
       bbbb
     </content-list> -->
     <!-- <ion-list *ngfor="let gatedata of gatedata"> -->
-    <ion-list >
+    <ion-list>
       <ion-item>
         <ion-label>
           <p>
-              ทางเข้า : {{startstation}} -> {{startgatehtml}}
+            START at : {{starthtml}} ->> line : {{startlinehtml}}
           </p>
-              <!-- <ng-template *ngIf="endgatehtml"> -->
-          <p *ngIf = 'nextstation'>
-              {{nextstation}}
+          <!-- <ng-template *ngIf="endgatehtml"> -->
+          <p *ngIf='nextstation'>
+            Chenge at : {{nextstation}} ->> to : {{nextstationline}} line
           </p>
-          <p *ngIf = 'nextstation'>
-          .
-          </p>             
-          <p *ngIf = 'connectgate'>
-            ทางเชื่อม : {{connectstationhtml}} -> {{connectgate}}
+          <p *ngIf='nextstation1'>
+            Chenge at : {{nextstation1}} ->> to : {{nextstation1line}} line 
           </p>
-          <p *ngIf = 'nextstation'>
-          .
-          </p>        
-          <p *ngIf = 'previousstation'>
-          {{previousstation}}
+          <p *ngIf='nextstation2'>
+            Chenge at : {{nextstation2}} ->> to : {{nextstation2line}} line
           </p>
-          <p *ngIf = 'endgatehtml'>          
-            ทางออก : {{endstation}} -> {{endgatehtml}}
+          <p *ngIf='endstationhtml'>
+            EXIT at : {{endstationhtml}} ->> to : {{endstationlinehtml}} line
           </p>
           <!-- </ng-template> -->
         </ion-label>
       </ion-item>
-      </ion-list>
+    </ion-list>
   </div>
 </content-drawer>
 <!-- <ion-footer>
