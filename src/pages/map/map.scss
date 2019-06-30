@@ -1,6 +1,15 @@
 ion-app._gmaps_cdv_ .nav-decor{
   background-color: transparent !important;
 }
+@media only screen and (max-width: 767px) {
+
+ 
+
+  p {
+     font-size: 2em;
+  }
+
+}
 
 page-map {
     #map {
@@ -19,6 +28,8 @@ page-map {
   margin: 0px;
   padding: 0px;
 }
+
+
 
 #custom-overlay {
   position: fixed;

@@ -348,13 +348,14 @@ export class MapPage {
 
     this.geocoder.geocode({ 'placeId': item.place_id }, (results, status) => {
       if (status === 'OK' && results[0]) {
+        console.log(results[0].geometry.viewport.na['j'])
         let marker = new google.maps.Marker({
-          position: { lat: results[0].geometry.viewport.na.j, lng: results[0].geometry.viewport.ia.j },
+          position: { lat: results[0].geometry.viewport.na['j'], lng: results[0].geometry.viewport.ga.j },
           map: this.map
         });
         this.markers.push(marker);
         this.map.setCenter(results[0].geometry.location);
-        this.end = { lat: results[0].geometry.viewport.na.j, lng: results[0].geometry.viewport.ia.j };
+        this.end = { lat: results[0].geometry.viewport.na.j, lng: results[0].geometry.viewport.ga.j };
         let compare = [];
         let compare1 = [];
         for (let index in this.Pop) {
